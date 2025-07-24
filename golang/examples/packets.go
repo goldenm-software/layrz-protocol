@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/goldenm-software/layrz-protocol/golang/v2"
+	layrzprotocol "github.com/goldenm-software/layrz-protocol/golang/v2"
 )
 
 func TestPackets() {
 	fmt.Printf("Testing packets...\n\n")
-	packet := "<Pb>1C9DC2691436;1740000984;19.4346059;-99.1802234;2240.800048828125;GENERIC;Core200S;-60;;06D0:01361469C29D1CC623020202;;6FF6;4FBD</Pb>"
+	packet := "<Pb>1C9DC2691436;1740000984;0;0;0;GENERIC;Core200S;-60;;06D0:01361469C29D1CC623020202;;6FF6;4FBD</Pb>"
 	originalPacket := packet
 	pb := layrzprotocol.PbPacket{}
 	err := pb.FromPacket(&packet)

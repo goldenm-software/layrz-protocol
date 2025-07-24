@@ -1,5 +1,7 @@
 github.com/go-ole/go-ole v1.2.6 h1:/Fpf6oFPoeFik9ty7siob0G6Ke8QvQEuVcuChpwXzpY=
 github.com/go-ole/go-ole v1.2.6/go.mod h1:pprOEPIfldk/42T2oK7lQ4v4JSDwmV0As9GaiUsvbm0=
+github.com/goldenm-software/layrz-protocol/golang/v2 v2.7.7 h1:uIv1RrsS+b45hU1gmo6I+BGkUndXkIQRTP+opiZDnEM=
+github.com/goldenm-software/layrz-protocol/golang/v2 v2.7.7/go.mod h1:DXQZX6sHud8mcI+IOU+BOEWs2IkJsza76NpYHvjYxEw=
 github.com/iancoleman/orderedmap v0.3.0 h1:5cbR2grmZR/DiVt+VJopEhtVs9YGInGIxAoMJn+Ichc=
 github.com/iancoleman/orderedmap v0.3.0/go.mod h1:XuLcCUkdL5owUCQeF2Ue9uuw1EptkJDkXXS7VoV7XGE=
 github.com/matishsiao/goInfo v0.0.0-20241216093258-66a9250504d6 h1:BIv50poKtm6s4vUlN6J2qAOARALk4ACAwM9VRmKPyiI=

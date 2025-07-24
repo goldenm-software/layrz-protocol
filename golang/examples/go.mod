@@ -3,7 +3,7 @@ module example
 go 1.23.5
 
 require (
-	github.com/goldenm-software/layrz-protocol/golang/v2 v2.7.6
+	github.com/goldenm-software/layrz-protocol/golang/v2 v2.7.7
 	github.com/matishsiao/goInfo v0.0.0-20241216093258-66a9250504d6
 	github.com/shirou/gopsutil v3.21.11+incompatible
 )
