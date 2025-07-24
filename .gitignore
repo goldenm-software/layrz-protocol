@@ -1,0 +1,25 @@
+.ruff_cache/
+
+c_cpp_properties.json
+
+# Ignore build files
+/build/
+/out/
+/bin/
+/obj/
+/*.o
+/*.a
+/*.so
+/*.exe
+/*.dll
+/*.dylib
+
+# Ignore IDE files
+/.vscode/
+/.idea/
+/*.suo
+/*.user
+/*.userossc
+/*.sln.docstates
+
+.mypy_cache/

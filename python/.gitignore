@@ -1,0 +1,14 @@
+.venv
+*.egg-info
+**/__pycache__
+test.py
+test_assets/
+dist/
+simulator.py
+manual_deploy.py
+.coverage
+coverage.lcov
+
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/

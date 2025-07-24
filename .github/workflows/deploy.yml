@@ -1,0 +1,75 @@
+name: "Deploy versions"
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy-python:
+    permissions:
+      id-token: write
+      contents: read
+      repository-projects: read
+      packages: read
+
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/goldenm-software/python-builder:uv-3.13-x86
+      options: --user root
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Get tag version
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Build and upload
+        env:
+          VERSION: ${{ env.VERSION }}
+        run: |
+          cd python
+          uv venv --python 3.13
+          uv pip install build twine
+          uv run python deploy.py
+          uv run python -m build
+          uv run python -m twine upload -u ${{ secrets.LAYRZ_PYPI_USERNAME }} -p ${{ secrets.LAYRZ_PYPI_PASSWORD }} dist/*
+
+  deploy-dart:
+    permissions:
+      id-token: write
+      contents: read
+      repository-projects: read
+      packages: read
+
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/goldenm-software/flutter-web-builder:x86-flutter3.32.2-uv-python3.13
+      options: --user root
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Get tag version
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Build and upload
+        env:
+          VERSION: ${{ env.VERSION }}
+        run: |
+          cd dart
+          uv venv --python 3.13
+          uv pip install build twine
+          uv run python deploy.py
+          uv run python authenticate.py
+          flutter pub publish --force
