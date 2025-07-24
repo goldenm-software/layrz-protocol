@@ -1,6 +1,6 @@
 name: layrz_protocol
 description: Layrz Link Protocol
-version: "1.0.0"
+version: "2.7.5"
 repository: https://github.com/goldenm-software/layrz_protocol_dart
 
 environment:

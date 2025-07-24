@@ -1,6 +1,11 @@
 # Layrz Protocol
 
-Managed by Golden M, Inc.
+![PyPI - Version](https://img.shields.io/pypi/v/layrz-protocol?style=for-the-badge&logo=python&logoColor=white&cacheSeconds=1)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/layrz-protocol?style=for-the-badge&logo=python&logoColor=white&cacheSeconds=1)
+![PyPI - Status](https://img.shields.io/pypi/status/layrz-protocol?style=for-the-badge&logo=python&logoColor=white&cacheSeconds=1)
+![PyPI - License](https://img.shields.io/pypi/l/layrz-protocol?style=for-the-badge&cacheSeconds=1)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/layrz-protocol?style=for-the-badge&logo=python&logoColor=white&cacheSeconds=1)
+![GitHub License](https://img.shields.io/github/license/goldenm-software/layrz-protocol?style=for-the-badge&logo=github&cacheSeconds=1)
 
 ## Description
 
@@ -9,11 +14,11 @@ Also, includes the the wrapper to send and receive messages from the Layrz Proto
 
 ## Requirements
 
-This library uses at least Python 3.13 or higher to work.
+This library uses at least Python 3.10 or higher to work.
 
 ## Documentation
 
-For more information about the protocol, check out the [Layrz Protocol Documentation](https://developers.layrz.com/LayrzProtocol)
+For more information about the protocol, check out the [Layrz Protocol Documentation](https://developers.layrz.com/protocol/)
 
 ## Work with us
 
@@ -24,4 +29,11 @@ For more information, contact us at [sales@layrz.com](mailto:sales@layrz.com)
 
 ## License
 
-This project is under MIT License, for more information, check out the `LICENCE`
+This project is under Apache License 2.0
+
+This project is maintained by [Golden M](https://goldenm.com) with authorization of [Layrz LTD](https://layrz.com).
+
+## Who are you? / Want to work with us?
+
+<b>Golden M</b> is a software and hardware development company what is working on a new, innovative and disruptive technologies. For more information, contact us at [sales@goldenm.com](mailto:sales@goldenm.com) or via WhatsApp at [+(507)-6979-3073](https://wa.me/50769793073?text="From%20layrz_models%20flutter%20library.%20Hello").
+
