@@ -66,6 +66,7 @@ jobs:
       - name: Build and upload
         env:
           VERSION: ${{ env.VERSION }}
+          PUB_JSON: ${{ secrets.LAYRZ_PUB_TOKEN }}
         run: |
           cd dart
           uv venv --python 3.13
