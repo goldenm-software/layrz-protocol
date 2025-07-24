@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.7
+
+- Sync of Golang
+
 ## 2.7.6
 
 - Changes on documentation
