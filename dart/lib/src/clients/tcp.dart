@@ -57,17 +57,9 @@ class LayrzProtocolSocket {
   /// [onEvent] is the stream of events.
   Stream<LayrzTcpEvent> get onEvent => _eventController.stream;
 
-  /// [isDisconnecting] indicates if the socket is in disconnecting state.
-  /// This is used to avoid reconnecting when the socket is being disconnected.
-  static bool isDisconnecting = false;
-
-  /// [isConnected] returns if the socket is connected.
-  /// This state if just after the reception of `AsPacket`.
-  static bool isConnected = false;
-
-  /// [serviceEnabled] indicates if the service is enabled.
+  /// [isActive] indicates if the service is enabled.
   /// This is used to avoid miss-savings on blackbox
-  static bool serviceEnabled = false;
+  static bool isActive = false;
 
   /// [splitRegExp] is the regular expression to split the packets.
   /// Sometimes, the socket connection sent multiple packets at once.
@@ -88,6 +80,7 @@ class LayrzProtocolSocket {
   /// [connect] connects to the server.
   Future<bool> connect({Duration timeout = const Duration(seconds: 5)}) async {
     try {
+      Completer<bool> completer = Completer<bool>();
       _socket = await Socket.connect(_host, _port, timeout: timeout);
       _eventController.add(TcpConnected());
       _socket!.listen(
@@ -108,13 +101,13 @@ class LayrzProtocolSocket {
             try {
               final parsedPacket = Packet.fromPacket(packet);
               if (parsedPacket is AuPacket) {
-                final auth = PaPacket(ident: ident, password: password).toPacket();
-                _socket?.writeln(auth);
+                LayrzLogging.info('AuPacket deprecated, skipping');
                 return;
               }
 
               if (parsedPacket is AsPacket) {
-                LayrzProtocolSocket.isConnected = true;
+                LayrzProtocolSocket.isActive = true;
+                if (!completer.isCompleted) completer.complete(true);
               }
               _eventController.add(MessageReceived(message: parsedPacket));
             } catch (e) {
@@ -133,31 +126,29 @@ class LayrzProtocolSocket {
         },
       );
 
-      final elapsed = Stopwatch()..start();
-      while (!LayrzProtocolSocket.isConnected) {
-        LayrzLogging.info('Waiting for connection to be established');
-        await Future.delayed(Duration(seconds: 1));
-        if (elapsed.elapsed > timeout) {
-          LayrzLogging.warning('Connection timed out after ${timeout.inSeconds} seconds');
-          _eventController.add(TcpDisconnected());
-          LayrzProtocolSocket.isConnected = false;
+      final auth = PaPacket(ident: ident, password: password).toPacket();
+      _socket!.writeln(auth);
+
+      return await completer.future.timeout(
+        timeout,
+        onTimeout: () {
+          if (!completer.isCompleted) {
+            completer.complete(false);
+          }
           return false;
-        }
-      }
+        },
+      );
     } catch (e) {
       LayrzLogging.critical('Error connecting to the server: $e');
       _eventController.add(TcpDisconnected());
-      LayrzProtocolSocket.isConnected = false;
+      LayrzProtocolSocket.isActive = false;
+      return false;
     }
-
-    return LayrzProtocolSocket.isConnected;
   }
 
   /// [disconnect] disconnects from the server.
   Future<bool> disconnect() async {
-    if (LayrzProtocolSocket.isDisconnecting) return LayrzProtocolSocket.isDisconnecting;
-    LayrzProtocolSocket.isDisconnecting = true;
-    LayrzProtocolSocket.serviceEnabled = false;
+    LayrzProtocolSocket.isActive = false;
     LayrzLogging.info('Disconnecting from the server');
     await _socket?.close();
     _socket?.destroy();
@@ -201,7 +192,7 @@ class LayrzProtocolSocket {
 
   /// [_validateAndSendBlackbox] validates if the service is enabled and sends the messages on the Blackbox.
   void _validateAndSendBlackbox() async {
-    if (!LayrzProtocolSocket.serviceEnabled) {
+    if (!LayrzProtocolSocket.isActive) {
       LayrzLogging.warning('Service is not enabled, ignoring Blackbox');
       return;
     }

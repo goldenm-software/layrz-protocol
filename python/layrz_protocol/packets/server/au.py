@@ -2,6 +2,8 @@
 
 import sys
 
+from deprecated import deprecated
+
 if sys.version_info >= (3, 11):
   from typing import Self
 else:
@@ -12,6 +14,7 @@ from layrz_protocol.utils import CrcException, MalformedException, calculate_crc
 from .base import ServerPacket
 
 
+@deprecated(version='3.0', reason='This packet is deprecated and will be removed in v4.0')
 class AuPacket(ServerPacket):
   """Au packet definition"""
 

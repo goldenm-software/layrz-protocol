@@ -37,7 +37,7 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/goldenm-software/python-builder:uv-3.13-x86
+      image: ghcr.io/goldenm-software/python-builder:uv-3.13
       options: --user root
       credentials:
         username: ${{ github.repository_owner }}
@@ -71,7 +71,7 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/goldenm-software/flutter-web-builder:x86-flutter3.32.1-uv-python3.13
+      image: ghcr.io/goldenm-software/flutter-web-builder:flutter3.35.2-uv-python3.13
       options: --user root
       credentials:
         username: ${{ github.repository_owner }}

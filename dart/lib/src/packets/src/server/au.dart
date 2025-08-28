@@ -1,9 +1,11 @@
 part of '../../packets.dart';
 
+@Deprecated('This packet is deprecated and will be removed in v4.0')
 class AuPacket extends ServerPacket {
   /// [AuPacket] is the authentication request package.
   ///
   /// This package is part of the package sent from the server to the device.
+  @Deprecated('This packet is deprecated and will be removed in v4.0')
   AuPacket() : super();
 
   /// [fromPacket] creates a [AuPacket] from a string package in the format of `Layrz Protocol v2`.

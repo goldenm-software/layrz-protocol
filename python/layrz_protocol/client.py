@@ -45,11 +45,8 @@ class LayrzProtocol:
     Constructor
 
     :param ident: Device unique identifier, this ident should be created in the Layrz Network
-    :type ident: str
     :param base_url: Layrz Network API URL
-    :type base_url: str
     :param password: Device password, normally is an empty string, but can be set to a custom value in Layrz
-    :type password: str
     """
     self.ident = ident
     self.password = password

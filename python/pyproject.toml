@@ -1,6 +1,6 @@
 [project]
 name = "layrz-protocol"
-version = "2.7.3"
+version = "3.0.0"
 description = "Layrz Protocol wrapper, allows to send or translate the messages from and to the Layrz Protocol"
 requires-python = ">=3.10"
 
@@ -38,6 +38,7 @@ classifiers = [
 ]
 
 dependencies = [
+  "deprecated>=1.2.18",
   "pydantic>=2.10.6",
   "requests>=2.32.3",
   "typing-extensions>=4.12.2",
@@ -57,6 +58,7 @@ dev = [
   "ruff>=0.9.4",
   "setuptools-scm>=8.1.0",
   "twine>=6.1.0",
+  "types-deprecated>=1.2.15.20250304",
   "types-requests>=2.32.0.20250306",
 ]
 

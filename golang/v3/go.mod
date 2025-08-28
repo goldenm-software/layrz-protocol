@@ -1,4 +1,4 @@
-module github.com/goldenm-software/layrz-protocol/golang/v2
+module github.com/goldenm-software/layrz-protocol/golang/v3
 
 go 1.23.5
 

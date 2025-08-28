@@ -9,6 +9,8 @@ import (
 
 // Based on the `Layrz Protocol v2` specification. AuPacket is the authorization request packet
 // sent from the server to the device
+//
+// Deprecated: This packet is deprecated and will be removed in v4.0
 type AuPacket struct{}
 
 // FromPacket is a method that converts a raw packet to a AuPacket
