@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.1
+
+- Fixes on Golang AuPacket deprecation warning
+
+## 3.0.0
+
+- Major Protocol update
+
 ## 2.7.7
 
 - Sync of Golang

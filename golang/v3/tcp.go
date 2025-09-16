@@ -82,6 +82,11 @@ func (p *TcpComm) Connect() error {
 	p.conn = &conn
 	go p.listen()
 
+	p.Send(&PaPacket{
+		Ident:    &p.Ident,
+		Password: &p.Passwd,
+	})
+
 	attempts := 0
 	for {
 		if p.authenticated {
@@ -128,11 +133,7 @@ func (p *TcpComm) listen() {
 					p.authenticated = true
 
 				case *AuPacket:
-					log.Println("Sending authentication packet...")
-					p.Send(&PaPacket{
-						Ident:    &p.Ident,
-						Password: &p.Passwd,
-					})
+					log.Println("Deprecated AuPacket...")
 
 				default:
 					if p.callback != nil {
