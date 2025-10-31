@@ -12,7 +12,7 @@ class AbPacket extends ServerPacket {
     required this.devices,
   }) : super();
 
-  /// [fromPacket] creates a [AbPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [AbPacket] from a string package in the format of `Layrz Protocol v3`.
   static AbPacket fromPacket(String raw) {
     if (!raw.startsWith('<Ab>') || !raw.endsWith('</Ab>')) {
       throw ParseException('Invalid identification package, should be <Ab>...</Ab>');

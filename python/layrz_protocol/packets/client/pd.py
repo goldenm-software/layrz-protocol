@@ -1,4 +1,4 @@
-"""Pd Packet"""
+from __future__ import annotations
 
 import sys
 from datetime import datetime
@@ -29,7 +29,7 @@ class PdPacket(ClientPacket):
   extra: dict[str, Any] = {}
 
   @staticmethod
-  def from_packet(raw: str) -> 'PdPacket':
+  def from_packet(raw: str) -> PdPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Pd>') or not raw.endswith('</Pd>'):
       raise MalformedException('Invalid packet definition, should be <Pd>...</Pd>')

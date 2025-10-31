@@ -1,7 +1,19 @@
 """Packets definitions"""
 
 from .base import Packet
-from .client import ClientPacket, PaPacket, PbPacket, PcPacket, PdPacket, PiPacket, PmPacket, PrPacket, PsPacket
+from .client import (
+  ClientPacket,
+  PaPacket,
+  PbPacket,
+  PcPacket,
+  PdPacket,
+  PePacket,
+  PiPacket,
+  PmPacket,
+  PrPacket,
+  PsPacket,
+  PtPacket,
+)
 from .definitions import (
   BleAdvertisement,
   BleData,
@@ -33,6 +45,8 @@ __all__ = [
   'Position',
   'PrPacket',
   'PsPacket',
+  'PtPacket',
+  'PePacket',
   # Utilities
   'Packet',
   'BleAdvertisement',

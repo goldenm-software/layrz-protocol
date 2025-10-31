@@ -12,7 +12,7 @@ class AcPacket extends ServerPacket {
     required this.commands,
   }) : super();
 
-  /// [fromPacket] creates a [AcPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [AcPacket] from a string package in the format of `Layrz Protocol v3`.
   static AcPacket fromPacket(String raw) {
     if (!raw.startsWith('<Ac>') || !raw.endsWith('</Ac>')) {
       throw ParseException('Invalid identification package, should be <Ac>...</Ac>');
@@ -29,7 +29,7 @@ class AcPacket extends ServerPacket {
     return AcPacket(commands: Command.fromPackets(parts.sublist(0, parts.length - 1).join(';')));
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = commands.map((e) => e.toPacket()).join(';');

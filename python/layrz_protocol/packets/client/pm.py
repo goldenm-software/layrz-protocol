@@ -1,4 +1,4 @@
-"""Pm Packet"""
+from __future__ import annotations
 
 import base64
 import sys
@@ -24,7 +24,7 @@ class PmPacket(ClientPacket):
   data: bytes = Field(..., description='Data of the packet')
 
   @staticmethod
-  def from_packet(raw: str) -> 'PmPacket':
+  def from_packet(raw: str) -> PmPacket:
     """Creates a media packet"""
     if not raw.startswith('<Pm>') or not raw.endswith('</Pm>'):
       raise MalformedException('Invalid packet definition, should be <Pm>...</Pm>')

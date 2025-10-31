@@ -15,6 +15,8 @@ part 'src/client/pb.dart';
 part 'src/client/pa.dart';
 part 'src/client/pr.dart';
 part 'src/client/pm.dart';
+part 'src/client/pt.dart';
+part 'src/client/pe.dart';
 
 part 'src/server/ao.dart';
 part 'src/server/ac.dart';

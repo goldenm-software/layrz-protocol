@@ -1,4 +1,4 @@
-"""Au Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -19,7 +19,7 @@ class AuPacket(ServerPacket):
   """Au packet definition"""
 
   @staticmethod
-  def from_packet(raw: str) -> 'AuPacket':
+  def from_packet(raw: str) -> AuPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Au>') or not raw.endswith('</Au>'):
       raise MalformedException('Invalid packet definition, should be <Au>...</Au>')

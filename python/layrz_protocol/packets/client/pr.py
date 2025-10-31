@@ -1,4 +1,4 @@
-"""Pr Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -17,7 +17,7 @@ class PrPacket(ClientPacket):
   """Pr packet definition"""
 
   @staticmethod
-  def from_packet(raw: str) -> 'PrPacket':
+  def from_packet(raw: str) -> PrPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Pr>') or not raw.endswith('</Pr>'):
       raise MalformedException('Invalid packet definition, should be <Pr>...</Pr>')

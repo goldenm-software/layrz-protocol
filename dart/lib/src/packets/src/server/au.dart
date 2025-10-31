@@ -8,7 +8,7 @@ class AuPacket extends ServerPacket {
   @Deprecated('This packet is deprecated and will be removed in v4.0')
   AuPacket() : super();
 
-  /// [fromPacket] creates a [AuPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [AuPacket] from a string package in the format of `Layrz Protocol v3`.
   static AuPacket fromPacket(String raw) {
     if (!raw.startsWith('<Au>') || !raw.endsWith('</Au>')) {
       throw ParseException('Invalid identification package, should be <Au>...</Au>');
@@ -30,7 +30,7 @@ class AuPacket extends ServerPacket {
     return AuPacket();
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = ';';

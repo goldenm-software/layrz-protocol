@@ -1,4 +1,4 @@
-"""Pb Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -22,7 +22,7 @@ class PbPacket(ClientPacket):
   advertisements: list[BleAdvertisement] = Field(default_factory=list, description='List of BLE advertisements')
 
   @staticmethod
-  def from_packet(raw: str) -> 'PbPacket':
+  def from_packet(raw: str) -> PbPacket:
     """Creates a BleAdvertisement from a raw message following this structure:
     MAC_ADDRESS;UNIX;LAT;LNG;ALT;MODEL;RSSI;MANUFACTURER+DATA;SERVICE+DATA;CRC16"""
     if not raw.startswith('<Pb>') or not raw.endswith('</Pb>'):

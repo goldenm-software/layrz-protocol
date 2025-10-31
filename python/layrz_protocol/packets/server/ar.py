@@ -1,4 +1,4 @@
-"""Ar Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -20,7 +20,7 @@ class ArPacket(ServerPacket):
   reason: str = Field(default='Unknown reason', description='Reason for the packet')
 
   @staticmethod
-  def from_packet(raw: str) -> 'ArPacket':
+  def from_packet(raw: str) -> ArPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Ar>') or not raw.endswith('</Ar>'):
       raise MalformedException('Invalid packet definition, should be <Ar>...</Ar>')

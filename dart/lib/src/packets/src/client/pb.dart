@@ -11,7 +11,7 @@ class PbPacket extends ClientPacket {
   /// a global network of devices, anywhere, anytime.
   PbPacket({required this.advertisements});
 
-  /// [fromPacket] creates a [PbPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [PbPacket] from a string package in the format of `Layrz Protocol v3`.
   static PbPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pb>') || !raw.endsWith('</Pb>')) {
       throw ParseException('Invalid identification package, should be <Pb>...</Pb>');
@@ -28,7 +28,7 @@ class PbPacket extends ClientPacket {
     return PbPacket(advertisements: BleAdvertisement.fromPacket(parts.sublist(0, parts.length - 1).join(';')));
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   ///
   /// Definition:
   /// `<Pb>BLE_ADVERSIEMENT;BLE_ADVERSIEMENT;BLE_ADVERSIEMENT;CRC16</Pb>`

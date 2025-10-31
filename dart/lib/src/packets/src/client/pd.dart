@@ -34,7 +34,7 @@ class PdPacket extends ClientPacket {
     required this.extra,
   });
 
-  /// [fromPacket] creates a [PdPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [PdPacket] from a string package in the format of `Layrz Protocol v3`.
   static PdPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pd>') || !raw.endsWith('</Pd>')) {
       throw ParseException('Invalid identification package, should be <Pd>...</Pd>');
@@ -76,7 +76,7 @@ class PdPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '${timestamp.millisecondsSinceEpoch ~/ 1000};';

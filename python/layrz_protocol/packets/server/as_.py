@@ -1,4 +1,4 @@
-"""As Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -16,7 +16,7 @@ class AsPacket(ServerPacket):
   """As packet definition"""
 
   @staticmethod
-  def from_packet(raw: str) -> 'AsPacket':
+  def from_packet(raw: str) -> AsPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<As>') or not raw.endswith('</As>'):
       raise MalformedException('Invalid packet definition, should be <As>...</As>')

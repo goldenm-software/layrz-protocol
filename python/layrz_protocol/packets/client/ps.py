@@ -1,4 +1,4 @@
-"""Ps Packet"""
+from __future__ import annotations
 
 import sys
 from datetime import datetime
@@ -24,7 +24,7 @@ class PsPacket(ClientPacket):
   params: dict[str, Any] = Field(default_factory=dict, description='Packet parameters')
 
   @staticmethod
-  def from_packet(raw: str) -> 'PsPacket':
+  def from_packet(raw: str) -> PsPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Ps>') or not raw.endswith('</Ps>'):
       raise MalformedException('Invalid packet definition, should be <Ps>...</Ps>')

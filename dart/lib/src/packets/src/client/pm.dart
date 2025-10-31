@@ -19,7 +19,7 @@ class PmPacket extends ClientPacket {
     required this.data,
   }) : super();
 
-  /// [fromPacket] creates a [PmPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [PmPacket] from a string package in the format of `Layrz Protocol v3`.
   static PmPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pm>') || !raw.endsWith('</Pm>')) {
       throw ParseException('Invalid identification package, should be <Pm>...</Pm>');
@@ -53,7 +53,7 @@ class PmPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '$filename;$contentType;${base64Encode(data)};';

@@ -1,4 +1,4 @@
-"""Pi Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -28,7 +28,7 @@ class PiPacket(ClientPacket):
   firmware_branch: FirmwareBranch = Field(default=FirmwareBranch.STABLE, description='Firmware branch')
 
   @staticmethod
-  def from_packet(raw: str) -> 'PiPacket':
+  def from_packet(raw: str) -> PiPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Pi>') or not raw.endswith('</Pi>'):
       raise MalformedException('Invalid packet definition, should be <Pi>...</Pi>')

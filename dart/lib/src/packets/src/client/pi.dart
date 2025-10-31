@@ -48,7 +48,7 @@ class PiPacket extends ClientPacket {
     required this.fotaEnabled,
   });
 
-  /// [fromPacket] creates a [PiPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [PiPacket] from a string package in the format of `Layrz Protocol v3`.
   static PiPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pi>') || !raw.endsWith('</Pi>')) {
       throw ParseException('Invalid identification package, should be <Pi>...</Pi>');
@@ -85,7 +85,7 @@ class PiPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   ///
   /// Definition:
   /// `<Pi>IMEI;FW_ID;FW_BUILD;SYS_DEV_ID;SYS_DEV_HW_ID;SYS_DEV_MD_ID;SYS_DEV_FW_BRANCH;FOTA_ENABLED;CRC16</Pi>`

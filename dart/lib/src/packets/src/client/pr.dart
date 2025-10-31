@@ -6,7 +6,7 @@ class PrPacket extends ClientPacket {
   /// This package is part of the package sent from the server to the device.
   PrPacket() : super();
 
-  /// [fromPacket] creates a [PrPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [PrPacket] from a string package in the format of `Layrz Protocol v3`.
   static PrPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pr>') || !raw.endsWith('</Pr>')) {
       throw ParseException('Invalid identification package, should be <Pr>...</Pr>');
@@ -27,7 +27,7 @@ class PrPacket extends ClientPacket {
     return PrPacket();
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = ';';

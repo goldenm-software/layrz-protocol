@@ -1,4 +1,4 @@
-"""Ab Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -21,7 +21,7 @@ class AbPacket(ServerPacket):
   devices: list[BleData] = Field(default_factory=list, description='List of BLE devices')
 
   @staticmethod
-  def from_packet(raw: str) -> 'AbPacket':
+  def from_packet(raw: str) -> AbPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Ab>') or not raw.endswith('</Ab>'):
       raise MalformedException('Invalid packet definition, should be <Ab>...</Ab>')

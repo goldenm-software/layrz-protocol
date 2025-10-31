@@ -1,4 +1,4 @@
-"""Pa Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -22,7 +22,7 @@ class PaPacket(ClientPacket):
   password: str = Field(..., description='Password')
 
   @staticmethod
-  def from_packet(raw: str) -> 'PaPacket':
+  def from_packet(raw: str) -> PaPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Pa>') or not raw.endswith('</Pa>'):
       raise MalformedException('Invalid packet definition, should be <Pa>...</Pa>')

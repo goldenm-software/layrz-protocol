@@ -1,4 +1,4 @@
-"""Ac Packet"""
+from __future__ import annotations
 
 import sys
 
@@ -21,7 +21,7 @@ class AcPacket(ServerPacket):
   commands: list[Command] = Field(default_factory=list, description='List of commands')
 
   @staticmethod
-  def from_packet(raw: str) -> 'AcPacket':
+  def from_packet(raw: str) -> AcPacket:
     """Create a packet from raw data"""
     if not raw.startswith('<Ac>') or not raw.endswith('</Ac>'):
       raise MalformedException('Invalid packet definition, should be <Ac>...</Ac>')

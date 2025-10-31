@@ -14,7 +14,7 @@ class AoPacket extends ServerPacket {
     required this.timestamp,
   }) : super();
 
-  /// [fromPacket] creates a [AoPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [AoPacket] from a string package in the format of `Layrz Protocol v3`.
   static AoPacket fromPacket(String raw) {
     if (!raw.startsWith('<Ao>') || !raw.endsWith('</Ao>')) {
       throw ParseException('Invalid identification package, should be <Ao>...</Ao>');
@@ -39,7 +39,7 @@ class AoPacket extends ServerPacket {
     }
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '${timestamp.millisecondsSinceEpoch ~/ 1000};';

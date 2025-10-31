@@ -24,7 +24,7 @@ class PcPacket extends ClientPacket {
     required this.message,
   });
 
-  /// [fromPacket] creates a [PcPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [PcPacket] from a string package in the format of `Layrz Protocol v3`.
   static PcPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pc>') || !raw.endsWith('</Pc>')) {
       throw ParseException('Invalid identification package, should be <Pc>...</Pc>');
@@ -56,7 +56,7 @@ class PcPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '${(timestamp.millisecondsSinceEpoch / 1000).round()};$commandId;$message;';

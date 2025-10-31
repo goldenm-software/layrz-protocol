@@ -12,7 +12,7 @@ class ArPacket extends ServerPacket {
     required this.reason,
   }) : super();
 
-  /// [fromPacket] creates a [ArPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [ArPacket] from a string package in the format of `Layrz Protocol v3`.
   static ArPacket fromPacket(String raw) {
     if (!raw.startsWith('<Ar>') || !raw.endsWith('</Ar>')) {
       throw ParseException('Invalid identification package, should be <Ar>...</Ar>');
@@ -33,7 +33,7 @@ class ArPacket extends ServerPacket {
     return ArPacket(reason: parts[0]);
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '$reason;';

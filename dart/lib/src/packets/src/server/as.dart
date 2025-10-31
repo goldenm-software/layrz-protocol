@@ -6,7 +6,7 @@ class AsPacket extends ServerPacket {
   /// This package is part of the package sent from the server to the device.
   AsPacket() : super();
 
-  /// [fromPacket] creates a [AsPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [AsPacket] from a string package in the format of `Layrz Protocol v3`.
   static AsPacket fromPacket(String raw) {
     if (!raw.startsWith('<As>') || !raw.endsWith('</As>')) {
       throw ParseException('Invalid identification package, should be <As>...</As>');
@@ -28,7 +28,7 @@ class AsPacket extends ServerPacket {
     return AsPacket();
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = ';';

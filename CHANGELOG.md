@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.2
+
+- Added `<Pt>` and `<Pe>` packets
+
 ## 3.0.1
 
 - Fixes on Golang AuPacket deprecation warning

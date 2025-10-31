@@ -13,7 +13,7 @@ class PaPacket extends ClientPacket {
     required this.password,
   });
 
-  /// [fromPacket] creates a [PaPacket] from a string package in the format of `Layrz Protocol v2`.
+  /// [fromPacket] creates a [PaPacket] from a string package in the format of `Layrz Protocol v3`.
   static PaPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pa>') || !raw.endsWith('</Pa>')) {
       throw ParseException('Invalid identification package, should be <Pa>...</Pa>');
@@ -30,7 +30,7 @@ class PaPacket extends ClientPacket {
     return PaPacket(ident: parts[0], password: parts[1]);
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v2`.
+  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
   ///
   /// Definition:
   /// `<Pa>IMEI;PASSWORD;CRC16</Pa>`

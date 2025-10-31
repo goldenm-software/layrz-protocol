@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 from datetime import datetime
 from typing import Any
+from uuid import UUID
 
 if sys.version_info >= (3, 11):
   from typing import Self
@@ -14,31 +15,32 @@ from pydantic import Field, field_validator
 from layrz_protocol.constants import UTC
 from layrz_protocol.utils import CrcException, MalformedException, calculate_crc
 
-from .base import ServerPacket
+from .base import ClientPacket
 
 
-class AoPacket(ServerPacket):
-  """Ao packet definition"""
+class PtPacket(ClientPacket):
+  """Pt packet definition"""
 
   timestamp: datetime = Field(default_factory=lambda: datetime.now(tz=UTC), description='Timestamp of the packet')
+  trip_id: UUID = Field(..., description='Trip ID')
 
   @staticmethod
-  def from_packet(raw: str) -> AoPacket:
+  def from_packet(raw: str) -> PtPacket:
     """Create a packet from raw data"""
-    if not raw.startswith('<Ao>') or not raw.endswith('</Ao>'):
-      raise MalformedException('Invalid packet definition, should be <Ao>...</Ao>')
+    if not raw.startswith('<Pt>') or not raw.endswith('</Pt>'):
+      raise MalformedException('Invalid packet definition, should be <Pt>...</Pt>')
 
     parts = raw[4:-5].split(';')
-    if len(parts) != 2:
-      raise MalformedException('Invalid packet definition, should have 2 parts')
+    if len(parts) != 3:
+      raise MalformedException('Invalid packet definition, should have 3 parts')
 
     received_crc: int
     try:
-      received_crc = int(parts[1], base=16)
+      received_crc = int(parts[-1], base=16)
     except ValueError:
       received_crc = 0
 
-    calculated_crc: int = calculate_crc(f'{parts[0]};'.encode())
+    calculated_crc: int = calculate_crc(f'{";".join(parts[:-1])};'.encode())
 
     if received_crc != calculated_crc:
       raise CrcException('Invalid CRC', received=received_crc, calculated=calculated_crc)
@@ -46,15 +48,22 @@ class AoPacket(ServerPacket):
     try:
       timestamp = datetime.fromtimestamp(int(parts[0]), tz=UTC)
     except ValueError as e:
-      raise MalformedException('Invalid timestamp, should be an int') from e
+      raise MalformedException('Invalid timestamp, should be an int or float') from e
 
-    return AoPacket(timestamp=timestamp)
+    try:
+      trip_id = UUID(parts[1])
+    except ValueError as e:
+      raise MalformedException('Invalid trip_id, should be a valid UUID') from e
+
+    return PtPacket(timestamp=timestamp, trip_id=trip_id)
 
   def to_packet(self: Self) -> str:
     """Convert packet to raw data"""
     raw = f'{int(self.timestamp.timestamp())};'
+    raw += f'{str(self.trip_id)};'
+
     crc = str(hex(calculate_crc(f'{raw}'.encode())))[2:].upper().zfill(4)
-    return f'<Ao>{raw}{crc}</Ao>'
+    return f'<Pt>{raw}{crc}</Pt>'
 
   def __str__(self: Self) -> str:
     """String representation of the packet"""
