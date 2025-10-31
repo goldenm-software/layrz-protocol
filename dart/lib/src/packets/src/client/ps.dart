@@ -1,17 +1,17 @@
 part of '../../packets.dart';
 
 class PsPacket extends ClientPacket {
-  /// [timestamp] is the time of the package.
-  /// This is identified in the package as `UNIX`
+  /// [timestamp] is the time of the packet.
+  /// This is identified in the packet as `UNIX`
   final DateTime timestamp;
 
-  /// [params] is the configuration parameters of the package.
-  /// This is identified in the package as `EXTRA+ARGS`
+  /// [params] is the configuration parameters of the packet.
+  /// This is identified in the packet as `EXTRA+ARGS`
   final Map<String, dynamic> params;
 
-  /// [PsPacket] is the configuration package.
+  /// [PsPacket] is the configuration packet.
   ///
-  /// This package is part of the package sent from the device to the server.
+  /// This packet is part of the packet sent from the device to the server.
   ///
   /// Also, this packet only will be sent when `get_config` or `set_config` command is received.
   PsPacket({
@@ -19,15 +19,15 @@ class PsPacket extends ClientPacket {
     required this.params,
   });
 
-  /// [fromPacket] creates a [PsPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PsPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PsPacket fromPacket(String raw) {
     if (!raw.startsWith('<Ps>') || !raw.endsWith('</Ps>')) {
-      throw ParseException('Invalid identification package, should be <Ps>...</Ps>');
+      throw ParseException('Invalid identification packet, should be <Ps>...</Ps>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 3) {
-      throw MalformedException('Invalid package parts, should have 3 parts');
+      throw MalformedException('Invalid packet parts, should have 3 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[2], radix: 16);
@@ -50,7 +50,7 @@ class PsPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '${(timestamp.millisecondsSinceEpoch / 1000).round()};';

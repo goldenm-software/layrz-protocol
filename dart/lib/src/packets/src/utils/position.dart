@@ -38,28 +38,28 @@ class Position {
     this.direction,
     this.satellites,
     this.hdop,
-  })  : assert(
-          latitude == null || (latitude >= -90 && latitude <= 90),
-          'latitude should be between -90 and 90',
-        ),
-        assert(
-          longitude == null || (longitude >= -180 && longitude <= 180),
-          'longitude should be between -180 and 180',
-        ),
-        assert(
-          speed == null || speed >= 0,
-          'speed should be greater than or equals to 0',
-        ),
-        assert(
-          direction == null || (direction >= 0 && direction <= 360),
-          'direction should be between 0 and 360',
-        ),
-        assert(
-          satellites == null || satellites >= 0,
-          'satellites should be greater than or equals to 0',
-        ),
-        assert(
-          hdop == null || hdop >= 0,
-          'hdop should be greater than or equals to 0',
-        );
+  }) : assert(
+         latitude == null || (latitude >= -90 && latitude <= 90),
+         'latitude should be between -90 and 90',
+       ),
+       assert(
+         longitude == null || (longitude >= -180 && longitude <= 180),
+         'longitude should be between -180 and 180',
+       ),
+       assert(
+         speed == null || speed >= 0,
+         'speed should be greater than or equals to 0',
+       ),
+       assert(
+         direction == null || (direction >= 0 && direction <= 360),
+         'direction should be between 0 and 360',
+       ),
+       assert(
+         satellites == null || satellites >= 0,
+         'satellites should be greater than or equals to 0',
+       ),
+       assert(
+         hdop == null || hdop >= 0,
+         'hdop should be greater than or equals to 0',
+       );
 }

@@ -10,24 +10,24 @@ class PmPacket extends ClientPacket {
   /// [data] is the content of the file.
   Uint8List data;
 
-  /// [PmPacket] is the media package.
+  /// [PmPacket] is the media packet.
   ///
-  /// This package is part of the package sent from the server to the device.
+  /// This packet is part of the packet sent from the server to the device.
   PmPacket({
     required this.filename,
     required this.contentType,
     required this.data,
   }) : super();
 
-  /// [fromPacket] creates a [PmPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PmPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PmPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pm>') || !raw.endsWith('</Pm>')) {
-      throw ParseException('Invalid identification package, should be <Pm>...</Pm>');
+      throw ParseException('Invalid identification packet, should be <Pm>...</Pm>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 4) {
-      throw MalformedException('Invalid package parts, should have 4 parts');
+      throw MalformedException('Invalid packet parts, should have 4 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[3], radix: 16);
@@ -53,7 +53,7 @@ class PmPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '$filename;$contentType;${base64Encode(data)};';

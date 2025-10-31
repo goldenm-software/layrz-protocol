@@ -1,42 +1,42 @@
 part of '../../packets.dart';
 
 class PiPacket extends ClientPacket {
-  /// [ident] is the Unique identifier, sent as part of the package as `IMEI`
+  /// [ident] is the Unique identifier, sent as part of the packet as `IMEI`
   final String ident;
 
   /// [firmwareId] is the firmware internal ID, this is in newer versions is a Layrz ID, otherwise is a unique
-  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the package as `FW_ID`
+  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the packet as `FW_ID`
   final String firmwareId;
 
   /// [firmwareBuild] is the firmware version, is an incremental number that is increased in each release.
-  /// This is identified in the package as `FW_BUILD`
+  /// This is identified in the packet as `FW_BUILD`
   final int firmwareBuild;
 
   /// [deviceId] is the device internal ID, this is in newer versions is a Layrz ID, otherwise is a unique
-  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the package as `SYS_DEV_ID`
+  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the packet as `SYS_DEV_ID`
   final String deviceId;
 
   /// [hardwareId] is the hardware internal ID, this is in newer versions is a Layrz ID, otherwise is a unique
-  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the package as `SYS_DEV_HW_ID`
+  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the packet as `SYS_DEV_HW_ID`
   final String hardwareId;
 
   /// [modelId] is the model internal ID, this is in newer versions is a Layrz ID, otherwise is a unique
-  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the package
+  /// identifier set by the hardware department of Layrz LTD. Also, is idenfified in the packet
   /// as `SYS_DEV_MODEL_ID`
   final String modelId;
 
-  /// [firmwareBranch] is the branch of the firmware, this is identified in the package as `SYS_DEV_FW_BRANCH`
+  /// [firmwareBranch] is the branch of the firmware, this is identified in the packet as `SYS_DEV_FW_BRANCH`
   final FirmwareBranch firmwareBranch;
 
   /// [fotaEnabled] is a boolean that indicates if the device is capable of receiving FOTA updates.
-  /// This is identified in the package as `FOTA_ENABLED`
+  /// This is identified in the packet as `FOTA_ENABLED`
   final bool fotaEnabled;
 
-  /// [PiPacket] is the identification package.
+  /// [PiPacket] is the identification packet.
   ///
-  /// This package is part of the package sent from the device to the server.
+  /// This packet is part of the packet sent from the device to the server.
   ///
-  /// This package should be sent when the device starts up or the `get_info` command is received.
+  /// This packet should be sent when the device starts up or the `get_info` command is received.
   PiPacket({
     required this.ident,
     required this.firmwareId,
@@ -48,15 +48,15 @@ class PiPacket extends ClientPacket {
     required this.fotaEnabled,
   });
 
-  /// [fromPacket] creates a [PiPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PiPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PiPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pi>') || !raw.endsWith('</Pi>')) {
-      throw ParseException('Invalid identification package, should be <Pi>...</Pi>');
+      throw ParseException('Invalid identification packet, should be <Pi>...</Pi>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 9) {
-      throw MalformedException('Invalid package parts, should have 6 parts');
+      throw MalformedException('Invalid packet parts, should have 6 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[8], radix: 16);
@@ -85,7 +85,7 @@ class PiPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   ///
   /// Definition:
   /// `<Pi>IMEI;FW_ID;FW_BUILD;SYS_DEV_ID;SYS_DEV_HW_ID;SYS_DEV_MD_ID;SYS_DEV_FW_BRANCH;FOTA_ENABLED;CRC16</Pi>`

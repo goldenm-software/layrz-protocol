@@ -15,20 +15,20 @@ from pydantic import Field, field_validator
 from layrz_protocol.constants import UTC
 from layrz_protocol.utils import CrcException, MalformedException, calculate_crc
 
-from .base import ClientPacket
+from .base import TripPacket
 
 
-class PtPacket(ClientPacket):
-  """Pt packet definition"""
+class TePacket(TripPacket):
+  """Te packet definition"""
 
   timestamp: datetime = Field(default_factory=lambda: datetime.now(tz=UTC), description='Timestamp of the packet')
   trip_id: UUID = Field(..., description='Trip ID')
 
   @staticmethod
-  def from_packet(raw: str) -> PtPacket:
+  def from_packet(raw: str) -> TePacket:
     """Create a packet from raw data"""
-    if not raw.startswith('<Pt>') or not raw.endswith('</Pt>'):
-      raise MalformedException('Invalid packet definition, should be <Pt>...</Pt>')
+    if not raw.startswith('<Te>') or not raw.endswith('</Te>'):
+      raise MalformedException('Invalid packet definition, should be <Te>...</Te>')
 
     parts = raw[4:-5].split(';')
     if len(parts) != 3:
@@ -55,7 +55,7 @@ class PtPacket(ClientPacket):
     except ValueError as e:
       raise MalformedException('Invalid trip_id, should be a valid UUID') from e
 
-    return PtPacket(timestamp=timestamp, trip_id=trip_id)
+    return TePacket(timestamp=timestamp, trip_id=trip_id)
 
   def to_packet(self: Self) -> str:
     """Convert packet to raw data"""
@@ -63,7 +63,7 @@ class PtPacket(ClientPacket):
     raw += f'{str(self.trip_id)};'
 
     crc = str(hex(calculate_crc(f'{raw}'.encode())))[2:].upper().zfill(4)
-    return f'<Pt>{raw}{crc}</Pt>'
+    return f'<Te>{raw}{crc}</Te>'
 
   def __str__(self: Self) -> str:
     """String representation of the packet"""

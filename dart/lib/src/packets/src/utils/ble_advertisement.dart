@@ -9,9 +9,9 @@ class BleData {
   /// and the model defined by Layrz.
   final String model;
 
-  /// [BleData] is the BLE data package.
+  /// [BleData] is the BLE data packet.
   ///
-  /// This package is part of the package sent from the server to the device.
+  /// This packet is part of the packet sent from the server to the device.
   const BleData({
     required this.macAddress,
     required this.model,
@@ -228,19 +228,21 @@ class BleAdvertisement {
         serviceData.add(BleServiceData(uuid: uuid, data: data));
       }
 
-      advertisements.add(BleAdvertisement(
-        deviceName: deviceName,
-        macAddress: macAddress,
-        timestamp: timestamp,
-        rssi: rssi,
-        model: model,
-        latitude: latitude,
-        longitude: longitude,
-        altitude: altitude,
-        txPower: txPower,
-        manufacturerData: manufacturerData,
-        serviceData: serviceData,
-      ));
+      advertisements.add(
+        BleAdvertisement(
+          deviceName: deviceName,
+          macAddress: macAddress,
+          timestamp: timestamp,
+          rssi: rssi,
+          model: model,
+          latitude: latitude,
+          longitude: longitude,
+          altitude: altitude,
+          txPower: txPower,
+          manufacturerData: manufacturerData,
+          serviceData: serviceData,
+        ),
+      );
     }
 
     return advertisements;

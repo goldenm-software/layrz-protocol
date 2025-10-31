@@ -1,20 +1,20 @@
 part of '../../packets.dart';
 
 class PrPacket extends ClientPacket {
-  /// [PrPacket] is the authentication success package.
+  /// [PrPacket] is the authentication success packet.
   ///
-  /// This package is part of the package sent from the server to the device.
+  /// This packet is part of the packet sent from the server to the device.
   PrPacket() : super();
 
-  /// [fromPacket] creates a [PrPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PrPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PrPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pr>') || !raw.endsWith('</Pr>')) {
-      throw ParseException('Invalid identification package, should be <Pr>...</Pr>');
+      throw ParseException('Invalid identification packet, should be <Pr>...</Pr>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 2) {
-      throw MalformedException('Invalid package parts, should have 2 parts');
+      throw MalformedException('Invalid packet parts, should have 2 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[1], radix: 16);
@@ -27,7 +27,7 @@ class PrPacket extends ClientPacket {
     return PrPacket();
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = ';';

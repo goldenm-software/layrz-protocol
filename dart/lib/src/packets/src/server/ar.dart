@@ -3,24 +3,24 @@ part of '../../packets.dart';
 class ArPacket extends ServerPacket {
   final String reason;
 
-  /// [ArPacket] is the error ACK package.
+  /// [ArPacket] is the error ACK packet.
   ///
-  /// This package is part of the package sent from the server to the device.
+  /// This packet is part of the packet sent from the server to the device.
   ArPacket({
     /// [reason] is the reason of the error.
-    /// This is identified in the package as `REASON`
+    /// This is identified in the packet as `REASON`
     required this.reason,
   }) : super();
 
-  /// [fromPacket] creates a [ArPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [ArPacket] from a string packet in the format of `Layrz Protocol v3`.
   static ArPacket fromPacket(String raw) {
     if (!raw.startsWith('<Ar>') || !raw.endsWith('</Ar>')) {
-      throw ParseException('Invalid identification package, should be <Ar>...</Ar>');
+      throw ParseException('Invalid identification packet, should be <Ar>...</Ar>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 2) {
-      throw MalformedException('Invalid package parts, should have 2 parts');
+      throw MalformedException('Invalid packet parts, should have 2 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[1], radix: 16);
@@ -33,7 +33,7 @@ class ArPacket extends ServerPacket {
     return ArPacket(reason: parts[0]);
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '$reason;';

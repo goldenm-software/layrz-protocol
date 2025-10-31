@@ -1,21 +1,21 @@
 part of '../../packets.dart';
 
 class AsPacket extends ServerPacket {
-  /// [AsPacket] is the authentication success package.
+  /// [AsPacket] is the authentication success packet.
   ///
-  /// This package is part of the package sent from the server to the device.
+  /// This packet is part of the packet sent from the server to the device.
   AsPacket() : super();
 
-  /// [fromPacket] creates a [AsPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [AsPacket] from a string packet in the format of `Layrz Protocol v3`.
   static AsPacket fromPacket(String raw) {
     if (!raw.startsWith('<As>') || !raw.endsWith('</As>')) {
-      throw ParseException('Invalid identification package, should be <As>...</As>');
+      throw ParseException('Invalid identification packet, should be <As>...</As>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
 
     if (parts.length != 2) {
-      throw MalformedException('Invalid package parts, should have 2 parts');
+      throw MalformedException('Invalid packet parts, should have 2 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[1], radix: 16);
@@ -28,7 +28,7 @@ class AsPacket extends ServerPacket {
     return AsPacket();
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = ';';

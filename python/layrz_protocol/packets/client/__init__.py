@@ -5,12 +5,10 @@ from .pa import PaPacket
 from .pb import PbPacket
 from .pc import PcPacket
 from .pd import PdPacket
-from .pe import PePacket
 from .pi import PiPacket
 from .pm import PmPacket
 from .pr import PrPacket
 from .ps import PsPacket
-from .pt import PtPacket
 
 __all__ = [
   'ClientPacket',
@@ -22,6 +20,4 @@ __all__ = [
   'PmPacket',
   'PrPacket',
   'PsPacket',
-  'PtPacket',
-  'PePacket',
 ]

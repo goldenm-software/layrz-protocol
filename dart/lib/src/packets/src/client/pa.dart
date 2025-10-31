@@ -1,22 +1,22 @@
 part of '../../packets.dart';
 
 class PaPacket extends ClientPacket {
-  /// [ident] is the Unique identifier, sent as part of the package as `IMEI`
+  /// [ident] is the Unique identifier, sent as part of the packet as `IMEI`
   final String ident;
 
   /// [password] is the password of the device.
   final String password;
 
-  /// [PaPacket] is authentication package. Only used over TCP connections.
+  /// [PaPacket] is authentication packet. Only used over TCP connections.
   PaPacket({
     required this.ident,
     required this.password,
   });
 
-  /// [fromPacket] creates a [PaPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PaPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PaPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pa>') || !raw.endsWith('</Pa>')) {
-      throw ParseException('Invalid identification package, should be <Pa>...</Pa>');
+      throw ParseException('Invalid identification packet, should be <Pa>...</Pa>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
@@ -30,7 +30,7 @@ class PaPacket extends ClientPacket {
     return PaPacket(ident: parts[0], password: parts[1]);
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   ///
   /// Definition:
   /// `<Pa>IMEI;PASSWORD;CRC16</Pa>`

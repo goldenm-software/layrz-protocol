@@ -1,38 +1,38 @@
 part of '../../packets.dart';
 
 class PcPacket extends ClientPacket {
-  /// [timestamp] is the time of the package.
-  /// This is identified in the package as `UNIX`
+  /// [timestamp] is the time of the packet.
+  /// This is identified in the packet as `UNIX`
   final DateTime timestamp;
 
   /// [commandId] is the command ID that is being ACKed.
-  /// This is identified in the package as `CMD_ID`
+  /// This is identified in the packet as `CMD_ID`
   final String commandId;
 
   /// [message] is the message of the ACK.
-  /// This is identified in the package as `MSG`
+  /// This is identified in the packet as `MSG`
   final String message;
 
-  /// [PcPacket] is the command ACK package.
+  /// [PcPacket] is the command ACK packet.
   ///
-  /// This package is part of the package sent from the device to the server.
+  /// This packet is part of the packet sent from the device to the server.
   ///
-  /// This package should be send after the execution of a command, received in [Ac] package.
+  /// This packet should be send after the execution of a command, received in [Ac] packet.
   PcPacket({
     required this.timestamp,
     required this.commandId,
     required this.message,
   });
 
-  /// [fromPacket] creates a [PcPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PcPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PcPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pc>') || !raw.endsWith('</Pc>')) {
-      throw ParseException('Invalid identification package, should be <Pc>...</Pc>');
+      throw ParseException('Invalid identification packet, should be <Pc>...</Pc>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 4) {
-      throw MalformedException('Invalid package parts, should have 4 parts');
+      throw MalformedException('Invalid packet parts, should have 4 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[3], radix: 16);
@@ -56,7 +56,7 @@ class PcPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '${(timestamp.millisecondsSinceEpoch / 1000).round()};$commandId;$message;';

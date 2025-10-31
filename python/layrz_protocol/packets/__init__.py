@@ -7,12 +7,10 @@ from .client import (
   PbPacket,
   PcPacket,
   PdPacket,
-  PePacket,
   PiPacket,
   PmPacket,
   PrPacket,
   PsPacket,
-  PtPacket,
 )
 from .definitions import (
   BleAdvertisement,
@@ -24,6 +22,11 @@ from .definitions import (
   Position,
 )
 from .server import AbPacket, AcPacket, AoPacket, ArPacket, AsPacket, AuPacket, ServerPacket
+from .trips import (
+  TePacket,
+  TripPacket,
+  TsPacket,
+)
 
 __all__ = [
   # Server packets
@@ -45,8 +48,10 @@ __all__ = [
   'Position',
   'PrPacket',
   'PsPacket',
-  'PtPacket',
-  'PePacket',
+  # Trip packets
+  'TripPacket',
+  'TsPacket',
+  'TePacket',
   # Utilities
   'Packet',
   'BleAdvertisement',

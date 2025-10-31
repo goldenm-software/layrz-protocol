@@ -4,17 +4,17 @@ class PbPacket extends ClientPacket {
   /// [advertisements] is the list of advertisements detected by the device.
   final List<BleAdvertisement> advertisements;
 
-  /// [PbPacket] is the Bluetooth Low Energy Detection package.
-  /// This package is sent by the device to the server.
+  /// [PbPacket] is the Bluetooth Low Energy Detection packet.
+  /// This packet is sent by the device to the server.
   ///
-  /// This package is part of the `Layrz Global Network`, a new initiative to create
+  /// This packet is part of the `Layrz Global Network`, a new initiative to create
   /// a global network of devices, anywhere, anytime.
   PbPacket({required this.advertisements});
 
-  /// [fromPacket] creates a [PbPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PbPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PbPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pb>') || !raw.endsWith('</Pb>')) {
-      throw ParseException('Invalid identification package, should be <Pb>...</Pb>');
+      throw ParseException('Invalid identification packet, should be <Pb>...</Pb>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
@@ -28,7 +28,7 @@ class PbPacket extends ClientPacket {
     return PbPacket(advertisements: BleAdvertisement.fromPacket(parts.sublist(0, parts.length - 1).join(';')));
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   ///
   /// Definition:
   /// `<Pb>BLE_ADVERSIEMENT;BLE_ADVERSIEMENT;BLE_ADVERSIEMENT;CRC16</Pb>`

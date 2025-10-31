@@ -1,31 +1,31 @@
 part of '../../packets.dart';
 
-class PePacket extends ClientPacket {
-  /// [timestamp] is the time of the package.
-  /// This is identified in the package as `UNIX`
+class TePacket extends ClientPacket {
+  /// [timestamp] is the time of the packet.
+  /// This is identified in the packet as `UNIX`
   final DateTime timestamp;
 
-  /// [tripId] is the trip identifier of the package.
-  /// This is identified in the package as `TRIP_ID`
+  /// [tripId] is the trip identifier of the packet.
+  /// This is identified in the packet as `TRIP_ID`
   final String tripId;
 
-  /// [PePacket] is the Trip end package.
+  /// [TePacket] is the Trip end packet.
   ///
-  /// This package is part of the package sent from the device to the server.
-  PePacket({
+  /// This packet is part of the packet sent between Layrz services to identify trips.
+  TePacket({
     required this.timestamp,
     required this.tripId,
   });
 
-  /// [fromPacket] creates a [PePacket] from a string package in the format of `Layrz Protocol v3`.
-  static PePacket fromPacket(String raw) {
-    if (!raw.startsWith('<Pe>') || !raw.endsWith('</Pe>')) {
-      throw ParseException('Invalid identification package, should be <Pe>...</Pe>');
+  /// [fromPacket] creates a [TePacket] from a string packet in the format of `Layrz Protocol v3`.
+  static TePacket fromPacket(String raw) {
+    if (!raw.startsWith('<Te>') || !raw.endsWith('</Te>')) {
+      throw ParseException('Invalid identification packet, should be <Te>...</Te>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 3) {
-      throw MalformedException('Invalid package parts, should have 3 parts');
+      throw MalformedException('Invalid packet parts, should have 3 parts');
     }
 
     int? receivedCrc = int.tryParse(parts[2], radix: 16);
@@ -42,31 +42,31 @@ class PePacket extends ClientPacket {
       throw MalformedException('Invalid timestamp');
     }
 
-    return PePacket(
+    return TePacket(
       timestamp: timestamp,
       tripId: parts[1],
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '${(timestamp.millisecondsSinceEpoch / 1000).round()};';
     payload += '$tripId;';
     String crc = calculateCrc(payload.codeUnits).toRadixString(16).padLeft(4, '0').toUpperCase();
 
-    return '<Pe>$payload$crc</Pe>';
+    return '<Te>$payload$crc</Te>';
   }
 
   @override
   String toString() => toPacket();
 
   @override
-  PePacket copyWith({
+  TePacket copyWith({
     DateTime? timestamp,
     String? tripId,
   }) {
-    return PePacket(
+    return TePacket(
       timestamp: timestamp ?? this.timestamp,
       tripId: tripId ?? this.tripId,
     );

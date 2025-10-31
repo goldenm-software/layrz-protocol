@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.3
+
+- Renamed `<Pt>` to `<Ts>` and `<Pe>` to `<Te>` for Trip Start and Trip End packets
+
 ## 3.0.2
 
 - Added `<Pt>` and `<Pe>` packets

@@ -1,48 +1,48 @@
 part of '../../packets.dart';
 
 class PdPacket extends ClientPacket {
-  /// [timestamp] is the time of the package.
-  /// This is identified in the package as `UNIX`
+  /// [timestamp] is the time of the packet.
+  /// This is identified in the packet as `UNIX`
   final DateTime timestamp;
 
-  /// [position] is the position of the package.
-  /// This is identified in the package as `LAT`, `LON`, `ALT`, `SPD`, `DIR`, `SAT` and `HDOP`
+  /// [position] is the position of the packet.
+  /// This is identified in the packet as `LAT`, `LON`, `ALT`, `SPD`, `DIR`, `SAT` and `HDOP`
   ///
-  /// - `LAT` is the latitude of the package.
-  /// - `LON` is the longitude of the package.
-  /// - `ALT` is the altitude of the package.
-  /// - `SPD` is the speed of the package.
-  /// - `DIR` is the direction of the package.
-  /// - `SAT` is the number of satellites of the package.
-  /// - `HDOP` is the HDOP of the package.
+  /// - `LAT` is the latitude of the packet.
+  /// - `LON` is the longitude of the packet.
+  /// - `ALT` is the altitude of the packet.
+  /// - `SPD` is the speed of the packet.
+  /// - `DIR` is the direction of the packet.
+  /// - `SAT` is the number of satellites of the packet.
+  /// - `HDOP` is the HDOP of the packet.
   ///
-  /// All of the above values are in the package separated by `;` and may be empty.
+  /// All of the above values are in the packet separated by `;` and may be empty.
   final Position position;
 
-  /// [extra] is the extra data of the package.
-  /// This is identified in the package as `EXTRA+ARGS`.
+  /// [extra] is the extra data of the packet.
+  /// This is identified in the packet as `EXTRA+ARGS`.
   final Map<String, dynamic> extra;
 
-  /// [PdPacket] is the data package.
+  /// [PdPacket] is the data packet.
   ///
-  /// This package is part of the package sent from the device to the server.
+  /// This packet is part of the packet sent from the device to the server.
   ///
-  ///  This package should be sent passively by the device.
+  ///  This packet should be sent passively by the device.
   PdPacket({
     required this.timestamp,
     required this.position,
     required this.extra,
   });
 
-  /// [fromPacket] creates a [PdPacket] from a string package in the format of `Layrz Protocol v3`.
+  /// [fromPacket] creates a [PdPacket] from a string packet in the format of `Layrz Protocol v3`.
   static PdPacket fromPacket(String raw) {
     if (!raw.startsWith('<Pd>') || !raw.endsWith('</Pd>')) {
-      throw ParseException('Invalid identification package, should be <Pd>...</Pd>');
+      throw ParseException('Invalid identification packet, should be <Pd>...</Pd>');
     }
 
     final parts = raw.substring(4, raw.length - 5).split(';');
     if (parts.length != 10) {
-      throw MalformedException('Invalid package parts, should have 10 parts, received ${parts.length} parts');
+      throw MalformedException('Invalid packet parts, should have 10 parts, received ${parts.length} parts');
     }
 
     int? receivedCrc = int.tryParse(parts[9], radix: 16);
@@ -76,7 +76,7 @@ class PdPacket extends ClientPacket {
     );
   }
 
-  /// [toPacket] returns the package in the format of `Layrz Protocol v3`.
+  /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.
   @override
   String toPacket() {
     String payload = '${timestamp.millisecondsSinceEpoch ~/ 1000};';
