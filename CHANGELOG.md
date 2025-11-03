@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.4
+
+- Updated `<Te>` packet to include additional metadata fields
+
 ## 3.0.3
 
 - Renamed `<Pt>` to `<Ts>` and `<Pe>` to `<Te>` for Trip Start and Trip End packets

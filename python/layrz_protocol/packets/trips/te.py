@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 from uuid import UUID
 
@@ -23,6 +23,9 @@ class TePacket(TripPacket):
 
   timestamp: datetime = Field(default_factory=lambda: datetime.now(tz=UTC), description='Timestamp of the packet')
   trip_id: UUID = Field(..., description='Trip ID')
+  distance_traveled: float = Field(0.0, description='Distance traveled in meters')
+  max_speed: float = Field(0.0, description='Maximum speed in km/h')
+  duration: timedelta = Field(default_factory=lambda: timedelta(0), description='Duration of the trip')
 
   @staticmethod
   def from_packet(raw: str) -> TePacket:
@@ -31,8 +34,8 @@ class TePacket(TripPacket):
       raise MalformedException('Invalid packet definition, should be <Te>...</Te>')
 
     parts = raw[4:-5].split(';')
-    if len(parts) != 3:
-      raise MalformedException('Invalid packet definition, should have 3 parts')
+    if len(parts) != 6:
+      raise MalformedException('Invalid packet definition, should have 6 parts')
 
     received_crc: int
     try:
@@ -55,12 +58,34 @@ class TePacket(TripPacket):
     except ValueError as e:
       raise MalformedException('Invalid trip_id, should be a valid UUID') from e
 
-    return TePacket(timestamp=timestamp, trip_id=trip_id)
+    try:
+      distance_traveled = float(parts[2])
+    except ValueError as e:
+      raise MalformedException('Invalid distance_traveled, should be a float') from e
+    try:
+      max_speed = float(parts[3])
+    except ValueError as e:
+      raise MalformedException('Invalid max_speed, should be a float') from e
+    try:
+      duration = timedelta(seconds=int(parts[4]))
+    except ValueError as e:
+      raise MalformedException('Invalid duration, should be a int representing seconds') from e
+
+    return TePacket(
+      timestamp=timestamp,
+      distance_traveled=distance_traveled,
+      max_speed=max_speed,
+      duration=duration,
+      trip_id=trip_id,
+    )
 
   def to_packet(self: Self) -> str:
     """Convert packet to raw data"""
     raw = f'{int(self.timestamp.timestamp())};'
     raw += f'{str(self.trip_id)};'
+    raw += f'{self.distance_traveled:.3f};'
+    raw += f'{self.max_speed:.3f};'
+    raw += f'{int(self.duration.total_seconds())};'
 
     crc = str(hex(calculate_crc(f'{raw}'.encode())))[2:].upper().zfill(4)
     return f'<Te>{raw}{crc}</Te>'
