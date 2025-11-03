@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.5
+
+- Fixes on Dart package for `<Te>` packet parsing (CRC and field order)
+
 ## 3.0.4
 
 - Updated `<Te>` packet to include additional metadata fields

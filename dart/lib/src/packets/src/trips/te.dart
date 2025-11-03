@@ -43,8 +43,8 @@ class TePacket extends ClientPacket {
       throw MalformedException('Invalid packet parts, should have 6 parts');
     }
 
-    int? receivedCrc = int.tryParse(parts[2], radix: 16);
-    int? calculatedCrc = calculateCrc("${parts.sublist(0, 2).join(';')};".codeUnits);
+    int? receivedCrc = int.tryParse(parts.last, radix: 16);
+    int? calculatedCrc = calculateCrc("${parts.sublist(0, 5).join(';')};".codeUnits);
 
     if (receivedCrc != calculatedCrc) {
       throw CrcException('Invalid CRC, received: $receivedCrc, calculated: $calculatedCrc');
@@ -59,21 +59,21 @@ class TePacket extends ClientPacket {
 
     double distanceTraveled;
     try {
-      distanceTraveled = double.parse(parts[3]);
+      distanceTraveled = double.parse(parts[2]);
     } catch (e) {
-      throw MalformedException('Invalid distance traveled');
+      throw MalformedException('Invalid distance traveled ${parts[2]}');
     }
 
     double maxSpeed;
     try {
-      maxSpeed = double.parse(parts[4]);
+      maxSpeed = double.parse(parts[3]);
     } catch (e) {
       throw MalformedException('Invalid max speed');
     }
 
     Duration duration;
     try {
-      duration = Duration(seconds: int.parse(parts[5]));
+      duration = Duration(seconds: int.parse(parts[4]));
     } catch (e) {
       throw MalformedException('Invalid duration');
     }
