@@ -1,6 +1,6 @@
 part of '../../packets.dart';
 
-class TsPacket extends ClientPacket {
+class TsPacket extends TripsPacket {
   /// [timestamp] is the time of the packet.
   /// This is identified in the packet as `UNIX`
   final DateTime timestamp;

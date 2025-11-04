@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.6
+
+- Crated `<Im>` packet for AI streaming messages
+
 ## 3.0.5
 
 - Fixes on Dart package for `<Te>` packet parsing (CRC and field order)

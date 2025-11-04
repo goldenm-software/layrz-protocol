@@ -26,6 +26,8 @@ part 'src/server/ab.dart';
 part 'src/server/as.dart';
 part 'src/server/au.dart';
 
+part 'src/ai/im.dart';
+
 part 'src/utils/command.dart';
 part 'src/utils/position.dart';
 part 'src/utils/ble_advertisement.dart';
@@ -48,7 +50,15 @@ class Packet {
     if (raw.startsWith('<Ar>') && raw.endsWith('</Ar>')) return ArPacket.fromPacket(raw);
     if (raw.startsWith('<Ab>') && raw.endsWith('</Ab>')) return AbPacket.fromPacket(raw);
     if (raw.startsWith('<As>') && raw.endsWith('</As>')) return AsPacket.fromPacket(raw);
+    // ignore: deprecated_member_use_from_same_package
     if (raw.startsWith('<Au>') && raw.endsWith('</Au>')) return AuPacket.fromPacket(raw);
+
+    // Trips packets
+    if (raw.startsWith('<Ts>') && raw.endsWith('</Ts>')) return TsPacket.fromPacket(raw);
+    if (raw.startsWith('<Te>') && raw.endsWith('</Te>')) return TePacket.fromPacket(raw);
+
+    // AI packets
+    if (raw.startsWith('<Im>') && raw.endsWith('</Im>')) return ImPacket.fromPacket(raw);
 
     LayrzLogging.critical('Invalid packet: $raw');
     throw MalformedException('Invalid packet type');
@@ -249,3 +259,7 @@ class Packet {
 class ServerPacket extends Packet {}
 
 class ClientPacket extends Packet {}
+
+class TripsPacket extends Packet {}
+
+class AIPacket extends Packet {}

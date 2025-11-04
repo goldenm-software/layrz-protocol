@@ -1,4 +1,4 @@
-"""Base packet definitions"""
+from __future__ import annotations
 
 import sys
 
@@ -16,7 +16,7 @@ class Packet(BaseModel):
   """Main packet class"""
 
   @staticmethod
-  def from_packet(raw: str) -> 'Packet':
+  def from_packet(raw: str) -> Packet:
     """Create a packet from raw data"""
     raise UnimplementedException('Method not implemented')
 

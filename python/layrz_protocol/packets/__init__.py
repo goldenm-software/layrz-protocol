@@ -1,5 +1,9 @@
 """Packets definitions"""
 
+from .ai import (
+  AiPacket,
+  ImPacket,
+)
 from .base import Packet
 from .client import (
   ClientPacket,
@@ -52,6 +56,9 @@ __all__ = [
   'TripPacket',
   'TsPacket',
   'TePacket',
+  # AI packets
+  'AiPacket',
+  'ImPacket',
   # Utilities
   'Packet',
   'BleAdvertisement',
