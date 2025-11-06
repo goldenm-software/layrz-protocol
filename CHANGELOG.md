@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.7
+
+- Changes on Apache-2.0 license format (Keeping only the appendix with copyright holder)
+
 ## 3.0.6
 
 - Crated `<Im>` packet for AI streaming messages

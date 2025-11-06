@@ -1,7 +1,7 @@
 name: layrz_protocol
 description: Layrz Link Protocol
 version: "3.0.0"
-repository: https://github.com/goldenm-software/layrz_protocol_dart
+repository: https://github.com/goldenm-software/layrz-protocol
 
 environment:
   sdk: ">=3.8.0 <4.0.0"

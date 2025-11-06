@@ -45,6 +45,11 @@ dependencies = [
   "tzdata>=2025.1",
 ]
 
+[project.urls]
+Repository = "https://github.com/goldenm-software/layrz-protocol"
+Changelog = "https://github.com/goldenm-software/layrz-protocol/blob/main/CHANGELOG.md"
+
+
 [build-system]
 requires = ["setuptools>=42", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
