@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.1.0
+
+- Added full C++ implementation (`cpp/`) with CMake C++17 build, covering all packet types (`Pa`, `Pb`, `Pc`, `Pd`, `Pi`, `Pm`, `Pr`, `Ps`, `Ab`, `Ac`, `Ao`, `Ar`, `As`, `Au`, `Ts`, `Te`, `Im`), CRC-16/X-25, BLE advertisement codec, extras parser, and HTTP/TCP transports
+- Added Go v3 implementation with full protocol parity against the Python source of truth
+- Fixed Dart parity issues against Python wire format (field order, CRC scope, `<Te>` and `<Ts>` packets)
+- Migrated Python type checker from `mypy` to `ty`; bumped `requires-python` to `>=3.13`
+
 ## 3.0.7
 
 - Changes on Apache-2.0 license format (Keeping only the appendix with copyright holder)
