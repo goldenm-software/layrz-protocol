@@ -34,7 +34,7 @@ jobs:
         id: check-dart
         with:
           working-directory: ./dart
-          flutter-version: 3.41.6
+          flutter-version: 3.41.9
           run-checks: true
           run-tests: true
           artifact-name: 'dart-coverage-${{ github.run_id }}'
