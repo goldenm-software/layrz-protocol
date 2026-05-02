@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	layrzprotocol "github.com/goldenm-software/layrz-protocol/golang/v2"
+	layrzprotocol "github.com/goldenm-software/layrz-protocol/go/v3"
 	"github.com/matishsiao/goInfo"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"

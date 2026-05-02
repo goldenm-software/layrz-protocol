@@ -3,26 +3,26 @@ package main
 import (
 	"fmt"
 
-	layrzprotocol "github.com/goldenm-software/layrz-protocol/golang/v2"
+	layrzprotocol "github.com/goldenm-software/layrz-protocol/go/v3"
 )
 
 func handleOutput(response *any) {
 	var data *string
 	var packet = *response
 
-	switch packet.(type) {
+	switch p := packet.(type) {
 	case *layrzprotocol.AbPacket:
-		data = packet.(*layrzprotocol.AbPacket).ToPacket()
+		data = p.ToPacket()
 	case *layrzprotocol.AcPacket:
-		data = packet.(*layrzprotocol.AcPacket).ToPacket()
+		data = p.ToPacket()
 	case *layrzprotocol.AoPacket:
-		data = packet.(*layrzprotocol.AoPacket).ToPacket()
+		data = p.ToPacket()
 	case *layrzprotocol.ArPacket:
-		data = packet.(*layrzprotocol.ArPacket).ToPacket()
+		data = p.ToPacket()
 	case *layrzprotocol.AsPacket:
-		data = packet.(*layrzprotocol.AsPacket).ToPacket()
+		data = p.ToPacket()
 	case *layrzprotocol.AuPacket:
-		data = packet.(*layrzprotocol.AuPacket).ToPacket()
+		data = p.ToPacket()
 	default:
 		fmt.Printf("Unknown packet type received: %T\n", response)
 		return
