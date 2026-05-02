@@ -50,17 +50,29 @@ jobs:
           run-tests: true
           artifact-name: 'go-coverage-${{ github.run_id }}'
 
+  lint-cpp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: goldenm-software/layrz-actions/.github/actions/check-cpp@v1
+        id: check-cpp
+        with:
+          working-directory: ./cpp
+          run-tests: true
+          artifact-name: 'cpp-coverage-${{ github.run_id }}'
+
   coverage-comment:
-    needs: [lint-python, lint-go, lint-dart]
+    needs: [lint-python, lint-go, lint-dart, lint-cpp]
     if: always() && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Download coverage artifacts
+      - name: Download Python coverage artifacts
         uses: actions/download-artifact@v4
         with:
           name: python-coverage-${{ github.run_id }}
           path: python-coverage
-      
+
       - name: Download Go coverage artifacts
         uses: actions/download-artifact@v4
         with:
@@ -72,7 +84,13 @@ jobs:
         with:
           name: dart-coverage-${{ github.run_id }}
           path: dart-coverage
-    
+
+      - name: Download C++ coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: cpp-coverage-${{ github.run_id }}
+          path: cpp-coverage
+
       - uses: goldenm-software/layrz-actions/.github/actions/coverage-comment@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -81,7 +99,9 @@ jobs:
           enable-go: true
           go-coverage-path: go-coverage/coverage-summary.txt
           enable-dart: true
-          dart-coverage-path: dart-coverage/coverage.json
+          dart-coverage-path: dart-coverage/lcov.info
+          enable-cpp: true
+          cpp-coverage-path: cpp-coverage/lcov.info
 
   changelog:
     runs-on: ubuntu-latest
