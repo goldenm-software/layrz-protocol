@@ -10,7 +10,7 @@ void main() {
 
     PcPacket link = PcPacket.fromPacket(payload);
 
-    expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(0));
+    expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(0, isUtc: true));
     expect(link.commandId, 1);
     expect(link.message, 'Hello world');
 

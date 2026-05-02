@@ -39,7 +39,7 @@ class PsPacket extends ClientPacket {
 
     DateTime timestamp;
     try {
-      timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(parts[0]) * 1000);
+      timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(parts[0]) * 1000, isUtc: true);
     } catch (e) {
       throw MalformedException('Invalid timestamp');
     }

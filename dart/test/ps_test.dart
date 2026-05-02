@@ -26,7 +26,7 @@ void main() {
 
     PsPacket link = PsPacket.fromPacket(payload);
 
-    expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(0));
+    expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(0, isUtc: true));
     expect(link.params, extra);
 
     String reversedPayload = link.toPacket();

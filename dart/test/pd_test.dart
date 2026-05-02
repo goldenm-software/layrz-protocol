@@ -33,7 +33,7 @@ void main() {
 
     PdPacket link = PdPacket.fromPacket(payload);
 
-    expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(0));
+    expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(0, isUtc: true));
     expect(link.position.latitude, 10.0);
     expect(link.position.longitude, 10.0);
     expect(link.position.altitude, 10.0);
