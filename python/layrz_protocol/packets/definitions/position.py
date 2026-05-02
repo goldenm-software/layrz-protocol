@@ -55,13 +55,12 @@ class Position(BaseModel):
     if not isinstance(direction, (int, float)):
       raise ValueError('direction should be a float')
 
-    if isinstance(direction, int):
-      direction = float(direction)
+    direction_f: float = float(direction) if isinstance(direction, int) else direction
 
-    if not 0 <= direction <= 360:
+    if not 0 <= direction_f <= 360:
       raise ValueError('direction should be between 0 and 360')
 
-    return direction
+    return direction_f
 
   @field_validator('hdop', mode='before')
   @classmethod
