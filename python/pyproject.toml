@@ -59,6 +59,7 @@ dev = [
   "build>=1.2.2.post1",
   "coverage>=7.6.10",
   "pytest>=8.3.5",
+  "pytest-cov>=6.0.0",
   "ruff>=0.9.4",
   "setuptools-scm>=8.1.0",
   "twine>=6.1.0",
