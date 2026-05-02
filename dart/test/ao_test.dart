@@ -9,7 +9,7 @@ void main() {
     payload = '<Ao>$payload$crc</Ao>';
 
     AoPacket link = AoPacket.fromPacket(payload);
-    expect(link.timestamp, '1');
+    expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(1 * 1000, isUtc: true));
 
     String reversedPayload = link.toPacket();
     expect(reversedPayload, payload);

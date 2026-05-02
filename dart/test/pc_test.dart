@@ -11,7 +11,7 @@ void main() {
     PcPacket link = PcPacket.fromPacket(payload);
 
     expect(link.timestamp, DateTime.fromMillisecondsSinceEpoch(0));
-    expect(link.commandId, '1');
+    expect(link.commandId, 1);
     expect(link.message, 'Hello world');
 
     String reversedPayload = link.toPacket();

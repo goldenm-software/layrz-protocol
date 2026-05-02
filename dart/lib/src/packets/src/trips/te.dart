@@ -92,7 +92,7 @@ class TePacket extends TripsPacket {
   String toPacket() {
     String payload = '${(timestamp.millisecondsSinceEpoch / 1000).round()};';
     payload += '$tripId;';
-    payload += ';${distanceTraveled.toStringAsFixed(3)};';
+    payload += '${distanceTraveled.toStringAsFixed(3)};';
     payload += '${maxSpeed.toStringAsFixed(3)};';
     payload += '${duration.inSeconds};';
     String crc = calculateCrc(payload.codeUnits).toRadixString(16).padLeft(4, '0').toUpperCase();

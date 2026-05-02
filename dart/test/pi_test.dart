@@ -18,7 +18,7 @@ void main() {
     payload += '$deviceId;';
     payload += '$hardwareId;';
     payload += '$modelId;';
-    payload += '${firmwareBranch.toJson()};';
+    payload += '${firmwareBranch.toPacket()};';
     // payload += '${fotaEnabled ? '1' : '0'};';
     payload += '1;';
 
