@@ -67,7 +67,10 @@ if(LAYRZ_PROTOCOL_BUILD_NET)
         PRIVATE Threads::Threads
     )
 
-    target_compile_definitions(layrz_protocol_net PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT=0)
+    target_compile_definitions(layrz_protocol_net
+        PUBLIC  LAYRZ_PROTOCOL_CLIENTS
+        PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT=0
+    )
 endif()
 
 # ─── Tests ────────────────────────────────────────────────────────────────────

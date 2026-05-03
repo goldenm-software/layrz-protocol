@@ -1,15 +1,34 @@
 #include "layrz_protocol/transport/tcp_comm.hpp"
+
+#ifdef LAYRZ_PROTOCOL_CLIENTS
+
 #include "layrz_protocol/parser.hpp"
 #include "layrz_protocol/packets/pa.hpp"
 
-#include <arpa/inet.h>
+#if defined(ESP_PLATFORM)
+  #include <lwip/sockets.h>
+  #include <lwip/netdb.h>
+  #define LAYRZ_CLOSE(fd)       lwip_close(fd)
+  #define LAYRZ_SHUTDOWN(fd, h) lwip_shutdown(fd, h)
+#elif defined(ARDUINO)
+  // Arduino TCP is handled via the WiFiClient/EthernetClient path; raw BSD
+  // sockets are not available.  Stub everything out — Arduino users get a
+  // compile-time "not implemented" at link time.
+  // Full Arduino backend is a follow-up.
+  #define LAYRZ_ARDUINO_STUB
+#else
+  #include <arpa/inet.h>
+  #include <netdb.h>
+  #include <sys/socket.h>
+  #include <sys/types.h>
+  #include <unistd.h>
+  #define LAYRZ_CLOSE(fd)       ::close(fd)
+  #define LAYRZ_SHUTDOWN(fd, h) ::shutdown(fd, h)
+#endif
+
 #include <chrono>
 #include <cstring>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <thread>
-#include <unistd.h>
 
 namespace layrz::protocol::transport {
 
@@ -31,8 +50,17 @@ void TcpComm::set_callback(std::function<void(AnyServerPacket)> cb) {
     callback_ = std::move(cb);
 }
 
+#ifdef LAYRZ_ARDUINO_STUB
+
+Error TcpComm::connect()    { return Error::Unimplemented; }
+Error TcpComm::send(const AnyClientPacket&) { return Error::Unimplemented; }
+void  TcpComm::close()      {}
+Error TcpComm::write_raw(const std::string&) { return Error::Unimplemented; }
+void  TcpComm::listen_loop() {}
+
+#else // POSIX or ESP-IDF (both expose BSD-ish socket API)
+
 Error TcpComm::connect() {
-    // Resolve and connect
     struct addrinfo hints{}, *res = nullptr;
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -45,7 +73,7 @@ Error TcpComm::connect() {
 
     if (::connect(sockfd_, res->ai_addr, res->ai_addrlen) != 0) {
         ::freeaddrinfo(res);
-        ::close(sockfd_);
+        LAYRZ_CLOSE(sockfd_);
         sockfd_ = -1;
         return Error::ServerError;
     }
@@ -55,14 +83,12 @@ Error TcpComm::connect() {
     authenticated_.store(false);
     listener_ = std::thread(&TcpComm::listen_loop, this);
 
-    // Send Pa (auth) packet
     packets::PaPacket pa;
     pa.ident    = ident_;
     pa.password = password_;
     if (auto e = write_raw(pa.to_packet() + "\r\n"); e != Error::Ok)
         return e;
 
-    // Wait up to connect_timeout_secs_ for AsPacket
     auto deadline = std::chrono::steady_clock::now()
                   + std::chrono::seconds(connect_timeout_secs_);
     while (!authenticated_.load()) {
@@ -81,8 +107,8 @@ Error TcpComm::send(const AnyClientPacket& packet) {
 void TcpComm::close() {
     stop_.store(true);
     if (sockfd_ >= 0) {
-        ::shutdown(sockfd_, SHUT_RDWR);
-        ::close(sockfd_);
+        LAYRZ_SHUTDOWN(sockfd_, 2 /* SHUT_RDWR */);
+        LAYRZ_CLOSE(sockfd_);
         sockfd_ = -1;
     }
     if (listener_.joinable()) listener_.join();
@@ -94,9 +120,6 @@ Error TcpComm::write_raw(const std::string& frame) {
     return (sent == static_cast<ssize_t>(frame.size())) ? Error::Ok : Error::ServerError;
 }
 
-// Inbound framing: accumulate bytes; whenever we see a complete <Xx>...</Xx> frame,
-// dispatch it. We scan for "</Xx>" close tags and slice off only the consumed bytes
-// (safe — unlike Go's regex+full-reset approach).
 void TcpComm::listen_loop() {
     std::string buf;
     buf.reserve(4096);
@@ -104,16 +127,13 @@ void TcpComm::listen_loop() {
 
     while (!stop_.load()) {
         ssize_t n = ::recv(sockfd_, tmp, sizeof(tmp), 0);
-        if (n <= 0) break; // connection closed or error
+        if (n <= 0) break;
         buf.append(tmp, static_cast<size_t>(n));
 
-        // Extract complete frames from buf
         while (true) {
-            // Find a close tag </Xx>
             size_t close_pos = std::string::npos;
             size_t close_len = 0;
 
-            // Search for any </[A-Z][a-z]> pattern
             for (size_t i = 0; i + 5 <= buf.size(); ++i) {
                 if (buf[i]   == '<' && buf[i+1] == '/' &&
                     std::isupper(static_cast<unsigned char>(buf[i+2])) &&
@@ -126,12 +146,10 @@ void TcpComm::listen_loop() {
             }
             if (close_pos == std::string::npos) break;
 
-            // Find the matching open tag before close_pos
             std::string close_tag = buf.substr(close_pos, close_len);
             std::string open_tag  = "<" + close_tag.substr(2, 2) + ">";
             size_t open_pos = buf.rfind(open_tag, close_pos);
             if (open_pos == std::string::npos) {
-                // Malformed: discard up to and including the close tag
                 buf.erase(0, close_pos + close_len);
                 continue;
             }
@@ -142,14 +160,12 @@ void TcpComm::listen_loop() {
             auto parsed = handle_server_output(frame);
             if (!parsed.ok()) continue;
 
-            // Handle auth handshake internally
             if (std::holds_alternative<packets::AsPacket>(parsed.value)) {
                 authenticated_.store(true);
                 continue;
             }
             if (std::holds_alternative<packets::AuPacket>(parsed.value)) {
-                // Deprecated: log and ignore (no stderr on embedded — just skip)
-                authenticated_.store(true); // treat as auth success for compatibility
+                authenticated_.store(true);
                 continue;
             }
 
@@ -158,4 +174,8 @@ void TcpComm::listen_loop() {
     }
 }
 
+#endif // LAYRZ_ARDUINO_STUB
+
 } // namespace layrz::protocol::transport
+
+#endif // LAYRZ_PROTOCOL_CLIENTS
