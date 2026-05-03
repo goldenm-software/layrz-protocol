@@ -69,25 +69,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Python coverage artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: python-coverage-${{ github.run_id }}
           path: python-coverage
 
       - name: Download Go coverage artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: go-coverage-${{ github.run_id }}
           path: go-coverage
 
       - name: Download Dart coverage artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dart-coverage-${{ github.run_id }}
           path: dart-coverage
 
       - name: Download C++ coverage artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: cpp-coverage-${{ github.run_id }}
           path: cpp-coverage
