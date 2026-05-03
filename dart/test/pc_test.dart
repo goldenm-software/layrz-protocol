@@ -2,6 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes PcPacket', () {
+    final ts = DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000, isUtc: true);
+    final original = PcPacket(timestamp: ts, commandId: 1, message: 'ok');
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<PcPacket>());
+  });
+
   test('PcPacket.parse()', () {
     String payload = '0;1;Hello world;';
     String crc = calculateCrc(payload.codeUnits).toRadixString(16).padLeft(4, '0').toUpperCase();

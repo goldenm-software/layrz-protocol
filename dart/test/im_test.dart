@@ -2,6 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes ImPacket', () {
+    final ts = DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000, isUtc: true);
+    final original = ImPacket(timestamp: ts, chatId: 'chat1', message: 'hello');
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<ImPacket>());
+  });
+
   test('ImPacket.parse()', () {
     final packet = ImPacket(
       timestamp: DateTime.utc(2025, 11, 4, 0, 0, 0),

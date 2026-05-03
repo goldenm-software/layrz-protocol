@@ -2,6 +2,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes PdPacket', () {
+    final ts = DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000, isUtc: true);
+    final original = PdPacket(
+      timestamp: ts,
+      position: Position(latitude: 10.0, longitude: 20.0),
+      extra: {'test.key': 1},
+    );
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<PdPacket>());
+  });
+
   test('PdPacket.parse()', () {
     String payload = '0;'; // timestamp
     payload += '10.0;'; // LAT

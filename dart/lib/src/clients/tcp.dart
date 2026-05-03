@@ -26,6 +26,7 @@ class LayrzProtocolSocket {
     this.password = '',
     required this.server,
     this.version = LayrzProtocolVersion.v2,
+    @visibleForTesting bool skipDatabase = false,
   }) : assert(ident.isNotEmpty) {
     if (server.contains(':')) {
       _host = server.split(':')[0];
@@ -37,11 +38,15 @@ class LayrzProtocolSocket {
       throw ArgumentError('The server should contain the port');
     }
 
-    try {
-      _db = LinkDatabase();
-    } catch (_) {
-      LayrzLogging.critical('Error initializing the database, continuing without Blackbox support');
+    if (skipDatabase) {
       _db = null;
+    } else {
+      try {
+        _db = LinkDatabase();
+      } catch (_) {
+        LayrzLogging.critical('Error initializing the database, continuing without Blackbox support');
+        _db = null;
+      }
     }
   }
 

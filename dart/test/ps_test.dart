@@ -2,6 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes PsPacket', () {
+    final ts = DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000, isUtc: true);
+    final original = PsPacket(timestamp: ts, params: {'wifi.ssid': 'test'});
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<PsPacket>());
+  });
+
   test('PsPacket.parse()', () {
     String payload = '0;'; // timestamp
     Map<String, dynamic> extra = {

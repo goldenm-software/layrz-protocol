@@ -2,6 +2,21 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes PiPacket', () {
+    final original = PiPacket(
+      ident: '123456789012345',
+      firmwareId: 'fw001',
+      firmwareBuild: 100,
+      deviceId: 'dev001',
+      hardwareId: 'hw001',
+      modelId: 'model001',
+      firmwareBranch: FirmwareBranch.stable,
+      fotaEnabled: false,
+    );
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<PiPacket>());
+  });
+
   test('PiPacket.parse()', () {
     String ident = 'testident';
     String firmwareId = '1';

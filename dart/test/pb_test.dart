@@ -2,6 +2,22 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes PbPacket', () {
+    final adv = BleAdvertisement(
+      deviceName: 'Test',
+      macAddress: '12:34:56:78:90:AB',
+      timestamp: DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000, isUtc: true),
+      rssi: -50,
+      model: 'ELA_PUCK_RHT',
+      txPower: -1,
+      manufacturerData: [],
+      serviceData: [],
+    );
+    final original = PbPacket(advertisements: [adv]);
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<PbPacket>());
+  });
+
   test('BleAdvertisement.toPacket()', () {
     final packet = BleAdvertisement(
       deviceName: 'P RHT',
