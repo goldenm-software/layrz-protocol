@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_CRC_HPP__
+#define __LAYRZ_PROTOCOL_CRC_HPP__
+
 #include <cstdint>
 #include <string>
 #include <string_view>
@@ -18,3 +21,5 @@ inline std::string compute_crc_str(std::string_view payload) {
 }
 
 } // namespace layrz::protocol
+
+#endif // __LAYRZ_PROTOCOL_CRC_HPP__

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_LAYRZ_PROTOCOL_HPP__
+#define __LAYRZ_PROTOCOL_LAYRZ_PROTOCOL_HPP__
+
 
 // Umbrella include — pulls in the full Layrz Protocol C++ library.
 // For embedded targets only include the specific headers you need.
@@ -35,3 +38,5 @@
 #include "layrz_protocol/packets/ps.hpp"
 #include "layrz_protocol/packets/te.hpp"
 #include "layrz_protocol/packets/ts.hpp"
+
+#endif // __LAYRZ_PROTOCOL_LAYRZ_PROTOCOL_HPP__

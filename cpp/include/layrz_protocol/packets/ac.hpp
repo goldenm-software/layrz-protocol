@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_AC_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_AC_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include "layrz_protocol/packets/command.hpp"
 #include <string>
@@ -15,3 +18,5 @@ struct AcPacket {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_AC_HPP__

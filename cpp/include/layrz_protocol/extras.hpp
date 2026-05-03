@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_EXTRAS_HPP__
+#define __LAYRZ_PROTOCOL_EXTRAS_HPP__
+
 #include <map>
 #include <string>
 #include <variant>
@@ -23,3 +26,5 @@ ExtrasMap parse_extra(std::string_view raw);
 std::string cast_extra(const ExtrasMap& extras);
 
 } // namespace layrz::protocol
+
+#endif // __LAYRZ_PROTOCOL_EXTRAS_HPP__

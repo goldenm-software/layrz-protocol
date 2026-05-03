@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_PC_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_PC_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include <ctime>
 #include <string>
@@ -16,3 +19,5 @@ struct PcPacket {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_PC_HPP__

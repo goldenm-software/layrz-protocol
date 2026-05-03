@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PARSER_HPP__
+#define __LAYRZ_PROTOCOL_PARSER_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include "layrz_protocol/packets/ab.hpp"
 #include "layrz_protocol/packets/ac.hpp"
@@ -59,3 +62,5 @@ Result<AnyServerPacket> handle_server_output(std::string_view raw);
 Result<std::string> parse_packet_to_string(const AnyClientPacket& packet);
 
 } // namespace layrz::protocol
+
+#endif // __LAYRZ_PROTOCOL_PARSER_HPP__

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_TE_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_TE_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include <ctime>
 #include <string>
@@ -18,3 +21,5 @@ struct TePacket {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_TE_HPP__

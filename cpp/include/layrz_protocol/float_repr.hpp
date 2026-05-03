@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_FLOAT_REPR_HPP__
+#define __LAYRZ_PROTOCOL_FLOAT_REPR_HPP__
+
 #include <string>
 
 namespace layrz::protocol {
@@ -10,3 +13,5 @@ namespace layrz::protocol {
 std::string python_repr_float(double v);
 
 } // namespace layrz::protocol
+
+#endif // __LAYRZ_PROTOCOL_FLOAT_REPR_HPP__

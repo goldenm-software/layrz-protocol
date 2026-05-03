@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_PB_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_PB_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include "layrz_protocol/ble/advertisement.hpp"
 #include <string>
@@ -15,3 +18,5 @@ struct PbPacket {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_PB_HPP__

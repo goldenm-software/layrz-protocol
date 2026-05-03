@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_COMMAND_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_COMMAND_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include "layrz_protocol/extras.hpp"
 #include <string>
@@ -18,3 +21,5 @@ struct CommandDefinition {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_COMMAND_HPP__

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_PD_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_PD_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include "layrz_protocol/extras.hpp"
 #include "layrz_protocol/packets/position.hpp"
@@ -19,3 +22,5 @@ struct PdPacket {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_PD_HPP__

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_PM_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_PM_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include <cstdint>
 #include <string>
@@ -17,3 +20,5 @@ struct PmPacket {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_PM_HPP__

@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_ERRORS_HPP__
+#define __LAYRZ_PROTOCOL_ERRORS_HPP__
+
 #include <string>
 #include <utility>
 
@@ -34,3 +37,5 @@ struct Result<void> {
 };
 
 } // namespace layrz::protocol
+
+#endif // __LAYRZ_PROTOCOL_ERRORS_HPP__

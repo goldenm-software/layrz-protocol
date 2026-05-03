@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_BLE_ADVERTISEMENT_HPP__
+#define __LAYRZ_PROTOCOL_BLE_ADVERTISEMENT_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include "layrz_protocol/ble/manufacturer_data.hpp"
 #include "layrz_protocol/ble/service_data.hpp"
@@ -32,3 +35,5 @@ struct Advertisement {
 };
 
 } // namespace layrz::protocol::ble
+
+#endif // __LAYRZ_PROTOCOL_BLE_ADVERTISEMENT_HPP__

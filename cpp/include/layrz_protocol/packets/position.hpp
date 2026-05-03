@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_POSITION_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_POSITION_HPP__
+
 #include <optional>
 
 namespace layrz::protocol::packets {
@@ -14,3 +17,5 @@ struct Position {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_POSITION_HPP__

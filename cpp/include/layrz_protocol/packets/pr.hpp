@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_PACKETS_PR_HPP__
+#define __LAYRZ_PROTOCOL_PACKETS_PR_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include <string>
 
@@ -11,3 +14,5 @@ struct PrPacket {
 };
 
 } // namespace layrz::protocol::packets
+
+#endif // __LAYRZ_PROTOCOL_PACKETS_PR_HPP__

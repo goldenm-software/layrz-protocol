@@ -1,4 +1,7 @@
 #pragma once
+#ifndef __LAYRZ_PROTOCOL_BLE_MANUFACTURER_DATA_HPP__
+#define __LAYRZ_PROTOCOL_BLE_MANUFACTURER_DATA_HPP__
+
 #include "layrz_protocol/errors.hpp"
 #include <cstdint>
 #include <string>
@@ -18,3 +21,5 @@ struct ManufacturerData {
 };
 
 } // namespace layrz::protocol::ble
+
+#endif // __LAYRZ_PROTOCOL_BLE_MANUFACTURER_DATA_HPP__
