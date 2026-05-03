@@ -265,6 +265,184 @@ func TestParseArgs(t *testing.T) {
 				return nil
 			},
 		},
+		{
+			name:  "GPIO analog output remapping",
+			input: "io4.ao:2048",
+			validate: func(args map[string]any) error {
+				_, ok := args["gpio.4.analog.output"]
+				if !ok {
+					return fmt.Errorf("gpio.4.analog.output key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE voltage level remapping",
+			input: "ble.0.volt:3300",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.voltage"]
+				if !ok {
+					return fmt.Errorf("ble.0.voltage key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE rpm remapping (key stays)",
+			input: "ble.0.rpm:1200",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.rpm"]
+				if !ok {
+					return fmt.Errorf("ble.0.rpm key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE pressure remapping",
+			input: "ble.1.press:1013",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.1.pressure"]
+				if !ok {
+					return fmt.Errorf("ble.1.pressure key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE event count remapping",
+			input: "ble.2.counter:5",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.2.event.count"]
+				if !ok {
+					return fmt.Errorf("ble.2.event.count key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE X acceleration remapping",
+			input: "ble.0.x_acc:100",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.acceleration.x"]
+				if !ok {
+					return fmt.Errorf("ble.0.acceleration.x key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE Y acceleration remapping",
+			input: "ble.0.y_acc:-50",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.acceleration.y"]
+				if !ok {
+					return fmt.Errorf("ble.0.acceleration.y key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE Z acceleration remapping",
+			input: "ble.0.z_acc:200",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.acceleration.z"]
+				if !ok {
+					return fmt.Errorf("ble.0.acceleration.z key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE message count remapping",
+			input: "ble.0.msg_count:3",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.message.count"]
+				if !ok {
+					return fmt.Errorf("ble.0.message.count key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE message remapping",
+			input: "ble.0.msg:hello",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.message"]
+				if !ok {
+					return fmt.Errorf("ble.0.message key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE magnetic event count remapping",
+			input: "ble.0.mag_counter:7",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.magnetic.event.count"]
+				if !ok {
+					return fmt.Errorf("ble.0.magnetic.event.count key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE magnetic data remapping",
+			input: "ble.0.mag_data:abc123",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.magnetic.data"]
+				if !ok {
+					return fmt.Errorf("ble.0.magnetic.data key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "BLE RSSI remapping",
+			input: "ble.0.rssi:-70",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.0.rssi.dbm"]
+				if !ok {
+					return fmt.Errorf("ble.0.rssi.dbm key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "confiot_ble remapping",
+			input: "confiot_ble:1",
+			validate: func(args map[string]any) error {
+				_, ok := args["ble.confiot.connection.status"]
+				if !ok {
+					return fmt.Errorf("ble.confiot.connection.status key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "confiot_serial remapping",
+			input: "confiot_serial:1",
+			validate: func(args map[string]any) error {
+				_, ok := args["serial.confiot.connection.status"]
+				if !ok {
+					return fmt.Errorf("serial.confiot.connection.status key not found")
+				}
+				return nil
+			},
+		},
+		{
+			name:  "malformed token without colon is skipped",
+			input: "keyonly,valid:42",
+			validate: func(args map[string]any) error {
+				if _, ok := args["keyonly"]; ok {
+					return fmt.Errorf("keyonly should have been skipped")
+				}
+				if _, ok := args["valid"]; !ok {
+					return fmt.Errorf("valid key should be present")
+				}
+				return nil
+			},
+		},
 	}
 
 	for _, tt := range tests {
