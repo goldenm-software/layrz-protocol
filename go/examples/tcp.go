@@ -9,7 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	layrzprotocol "github.com/goldenm-software/layrz-protocol/go/v3"
+	"github.com/goldenm-software/layrz-protocol/go/v3/clients"
+	"github.com/goldenm-software/layrz-protocol/go/v3/definitions"
+	"github.com/goldenm-software/layrz-protocol/go/v3/packets/client"
 	"github.com/matishsiao/goInfo"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
@@ -17,7 +19,7 @@ import (
 
 func TestTcp() {
 	fmt.Printf("Testing Tcp comm...\n\n")
-	tcp := layrzprotocol.TcpComm{}
+	tcp := clients.TcpComm{}
 	ident := "link_server_pruebas"
 	tcp.New("<server>", 1234, ident, "")
 	// tcp.New("127.0.0.1", 5000, ident, "")
@@ -28,14 +30,14 @@ func TestTcp() {
 	tcp.SetCallback(tcpCallback)
 	log.Println("Conection stablished, sending Pi packet...")
 
-	err = tcp.Send(&layrzprotocol.PiPacket{
+	err = tcp.Send(&client.PiPacket{
 		Ident:          ident,
 		FirmwareId:     "com.layrz.link.servers",
 		FirmwareBuild:  0,
 		DeviceId:       0,
 		HardwareId:     0,
 		ModelId:        0,
-		FirmwareBranch: layrzprotocol.Stable,
+		FirmwareBranch: definitions.Stable,
 		FotaEnabled:    false,
 	})
 
@@ -73,7 +75,7 @@ func tcpCallback(data *any) {
 	log.Printf("Received: %v\n", data)
 }
 
-func extractData() layrzprotocol.PdPacket {
+func extractData() client.PdPacket {
 	var data map[string]any = make(map[string]any)
 
 	gi, err := goInfo.GetInfo()
@@ -103,9 +105,9 @@ func extractData() layrzprotocol.PdPacket {
 		data["memory.used.percent"] = memInfo.UsedPercent
 	}
 
-	pd := layrzprotocol.PdPacket{}
+	pd := client.PdPacket{}
 	pd.Timestamp = time.Now()
-	pd.ExtraData = &data
+	pd.ExtraData = data
 
 	return pd
 }

@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"time"
 
-	layrzprotocol "github.com/goldenm-software/layrz-protocol/go/v3"
+	"github.com/goldenm-software/layrz-protocol/go/v3/clients"
+	"github.com/goldenm-software/layrz-protocol/go/v3/definitions"
+	"github.com/goldenm-software/layrz-protocol/go/v3/packets/client"
 )
 
 func TestHttp() {
 	fmt.Printf("Testing HTTP comm...\n\n")
-	http := layrzprotocol.HttpComm{}
+	http := clients.HttpComm{}
 	http.New(
-		layrzprotocol.HTTPS,
+		clients.HTTPS,
 		"<server>",
 		"link_test",
 		"",
@@ -25,12 +27,12 @@ func TestHttp() {
 
 	handleOutput(output)
 
-	pi := layrzprotocol.PiPacket{}
+	pi := client.PiPacket{}
 	pi.Ident = "link_test"
 	pi.DeviceId = 0
 	pi.FirmwareId = ""
 	pi.FirmwareBuild = 0
-	pi.FirmwareBranch = layrzprotocol.Stable
+	pi.FirmwareBranch = definitions.Stable
 	pi.HardwareId = 0
 	pi.ModelId = 0
 	pi.FotaEnabled = false
@@ -47,7 +49,7 @@ func TestHttp() {
 	longitude := -99.1802234
 	altitude := 2240.00
 
-	position := layrzprotocol.Position{
+	position := definitions.Position{
 		Latitude:  &latitude,
 		Longitude: &longitude,
 		Altitude:  &altitude,
@@ -60,10 +62,10 @@ func TestHttp() {
 	extra["int"] = 1234
 	extra["float"] = 12.34
 
-	pd := layrzprotocol.PdPacket{}
+	pd := client.PdPacket{}
 	pd.Timestamp = time.Now()
 	pd.Position = &position
-	pd.ExtraData = &extra
+	pd.ExtraData = extra
 
 	fmt.Printf("Sending %s...\n", *pd.ToPacket())
 	output, err = http.Send(&pd)
@@ -72,18 +74,4 @@ func TestHttp() {
 	}
 
 	handleOutput(output)
-
-	// msg := "Hello world"
-	// pc := layrzprotocol.PcPacket{}
-	// pc.Timestamp = time.Now()
-	// pc.CommandId = 1924
-	// pc.Message = &msg
-
-	// fmt.Printf("Sending %s...\n", *pc.ToPacket())
-	// output, err = http.Send(&pc)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// handleHttpOutput(*output)
 }

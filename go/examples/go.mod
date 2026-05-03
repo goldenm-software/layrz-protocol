@@ -1,6 +1,8 @@
 module example
 
-go 1.23.5
+go 1.26.2
+
+replace github.com/goldenm-software/layrz-protocol/go/v3 => ../
 
 require (
 	github.com/goldenm-software/layrz-protocol/go/v3 v3.1.0

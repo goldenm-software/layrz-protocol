@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"strings"
 
-	layrzprotocol "github.com/goldenm-software/layrz-protocol/go/v3"
+	"github.com/goldenm-software/layrz-protocol/go/v3/packets/client"
+	"github.com/goldenm-software/layrz-protocol/go/v3/packets/server"
 )
 
 func TestPackets() {
 	fmt.Printf("Testing packets...\n\n")
 	packet := "<Pb>1C9DC2691436;1740000984;0;0;0;GENERIC;Core200S;-60;;06D0:01361469C29D1CC623020202;;6FF6;4FBD</Pb>"
 	originalPacket := packet
-	pb := layrzprotocol.PbPacket{}
+	pb := client.PbPacket{}
 	err := pb.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -23,7 +24,7 @@ func TestPackets() {
 
 	packet = "<Ab>000000000000:MODEL1;000000000001:MODEL2;7DA8</Ab>"
 	originalPacket = packet
-	ab := layrzprotocol.AbPacket{}
+	ab := server.AbPacket{}
 	err = ab.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -35,7 +36,7 @@ func TestPackets() {
 
 	packet = "<Ac>1;set_config;int:1234,float:12.34,bool:true,string:test;6C56;815F</Ac>"
 	originalPacket = packet
-	ac := layrzprotocol.AcPacket{}
+	ac := server.AcPacket{}
 	err = ac.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -47,7 +48,7 @@ func TestPackets() {
 
 	packet = "<Pc>1739998848;1919;Cannot sniff in foreground;7DCB</Pc>"
 	originalPacket = packet
-	pc := layrzprotocol.PcPacket{}
+	pc := client.PcPacket{}
 	err = pc.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -59,7 +60,7 @@ func TestPackets() {
 
 	packet = "<Ps>1739998822;configuration.distance.filter.meters:5,configuration.frequency.update.seconds:20,configuration.accuracy:best,configuration.server:development,configuration.sniff.interval:30,configuration.sniff.cooldown:30;BD6B</Ps>"
 	originalPacket = packet
-	ps := layrzprotocol.PsPacket{}
+	ps := client.PsPacket{}
 	err = ps.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -71,7 +72,7 @@ func TestPackets() {
 
 	packet = "<Pd>1740081532;;;;;;;;report.code:LKSEN,fw.build:49,wifi.rssi:-61,cpu.temperature:43,io1.di:0,io2.di:0,io5.di:0,io6.di:0,io7.di:0,io14.di:0,io45.di:0,io46.di:0,io47.di:0;1ACF</Pd>"
 	originalPacket = packet
-	pd := layrzprotocol.PdPacket{}
+	pd := client.PdPacket{}
 	err = pd.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -83,7 +84,7 @@ func TestPackets() {
 
 	packet = "<Pi>744DBD89B0D9;layrz.hub12.base;49;22246;1;460;0;false;2586</Pi>"
 	originalPacket = packet
-	pi := layrzprotocol.PiPacket{}
+	pi := client.PiPacket{}
 	err = pi.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -95,7 +96,7 @@ func TestPackets() {
 
 	packet = "<Pa>phkenny123;;2664</Pa>"
 	originalPacket = packet
-	pa := layrzprotocol.PaPacket{}
+	pa := client.PaPacket{}
 	err = pa.FromPacket(&packet)
 	if err != nil {
 		panic(err)
@@ -107,11 +108,12 @@ func TestPackets() {
 
 	packet = "<Pr>;7F28</Pr>"
 	originalPacket = packet
-	pr := layrzprotocol.PrPacket{}
+	pr := client.PrPacket{}
 	err = pr.FromPacket(&packet)
 	if err != nil {
 		panic(err)
 	}
 	// fmt.Println("(pr.FromPacket()).ToPacket() = ", *pr.ToPacket(), "originalPacket = ", originalPacket)
 	fmt.Println("pr is equal? ", strings.Compare(originalPacket, *pr.ToPacket()) == 0)
+
 }

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	layrzprotocol "github.com/goldenm-software/layrz-protocol/go/v3"
+	"github.com/goldenm-software/layrz-protocol/go/v3/packets/server"
 )
 
 func handleOutput(response *any) {
@@ -11,17 +11,17 @@ func handleOutput(response *any) {
 	var packet = *response
 
 	switch p := packet.(type) {
-	case *layrzprotocol.AbPacket:
+	case *server.AbPacket:
 		data = p.ToPacket()
-	case *layrzprotocol.AcPacket:
+	case *server.AcPacket:
 		data = p.ToPacket()
-	case *layrzprotocol.AoPacket:
+	case *server.AoPacket:
 		data = p.ToPacket()
-	case *layrzprotocol.ArPacket:
+	case *server.ArPacket:
 		data = p.ToPacket()
-	case *layrzprotocol.AsPacket:
+	case *server.AsPacket:
 		data = p.ToPacket()
-	case *layrzprotocol.AuPacket:
+	case *server.AuPacket:
 		data = p.ToPacket()
 	default:
 		fmt.Printf("Unknown packet type received: %T\n", response)
