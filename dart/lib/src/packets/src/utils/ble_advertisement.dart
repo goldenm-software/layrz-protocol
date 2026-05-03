@@ -167,7 +167,7 @@ class BleAdvertisement {
 
       DateTime timestamp;
       try {
-        timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(rawUnix) * 1000);
+        timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(rawUnix) * 1000, isUtc: true);
       } catch (e) {
         throw MalformedException('Invalid timestamp');
       }

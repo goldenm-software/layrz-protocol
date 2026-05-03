@@ -2,11 +2,27 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes PbPacket', () {
+    final adv = BleAdvertisement(
+      deviceName: 'Test',
+      macAddress: '12:34:56:78:90:AB',
+      timestamp: DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000, isUtc: true),
+      rssi: -50,
+      model: 'ELA_PUCK_RHT',
+      txPower: -1,
+      manufacturerData: [],
+      serviceData: [],
+    );
+    final original = PbPacket(advertisements: [adv]);
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<PbPacket>());
+  });
+
   test('BleAdvertisement.toPacket()', () {
     final packet = BleAdvertisement(
       deviceName: 'P RHT',
       macAddress: '12:34:56:78:90:AB',
-      timestamp: DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000),
+      timestamp: DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000, isUtc: true),
       rssi: -50,
       model: 'ELA_PUCK_RHT',
       txPower: -1,
@@ -20,7 +36,7 @@ void main() {
     );
 
     expect(packet.macAddress, "12:34:56:78:90:AB");
-    expect(packet.timestamp, DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000));
+    expect(packet.timestamp, DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000, isUtc: true));
     expect(packet.latitude, null);
     expect(packet.longitude, null);
     expect(packet.altitude, null);
@@ -51,7 +67,7 @@ void main() {
 
     final elaAdv = packets[0];
     expect(elaAdv.macAddress, "12:34:56:78:90:AB");
-    expect(elaAdv.timestamp, DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000));
+    expect(elaAdv.timestamp, DateTime.fromMillisecondsSinceEpoch(1738276597 * 1000, isUtc: true));
     expect(elaAdv.latitude, null);
     expect(elaAdv.longitude, null);
     expect(elaAdv.altitude, null);

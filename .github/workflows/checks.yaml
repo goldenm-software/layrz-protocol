@@ -1,0 +1,116 @@
+name: "Checks"
+
+on:
+  pull_request:
+    branches: [ main, next, development ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  lint-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: goldenm-software/layrz-actions/.github/actions/check-python@v1
+        id: check-python
+        with:
+          working-directory: ./python
+          run-type-check: true
+          run-tests: true
+          coverage-library: 'layrz_protocol'
+          artifact-name: 'python-coverage-${{ github.run_id }}'
+  
+  lint-dart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: goldenm-software/layrz-actions/.github/actions/check-dart@v1
+        id: check-dart
+        with:
+          working-directory: ./dart
+          flutter-version: 3.41.9
+          run-checks: true
+          run-tests: true
+          artifact-name: 'dart-coverage-${{ github.run_id }}'
+
+  lint-go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: goldenm-software/layrz-actions/.github/actions/check-go@v1
+        id: check-go
+        with:
+          working-directory: ./go
+          go-version: '1.26.2'
+          run-tests: true
+          artifact-name: 'go-coverage-${{ github.run_id }}'
+
+  lint-cpp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: goldenm-software/layrz-actions/.github/actions/check-cpp@v1
+        id: check-cpp
+        with:
+          working-directory: ./cpp
+          run-tests: true
+          artifact-name: 'cpp-coverage-${{ github.run_id }}'
+
+  coverage-comment:
+    needs: [lint-python, lint-go, lint-dart, lint-cpp]
+    if: always() && github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python coverage artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: python-coverage-${{ github.run_id }}
+          path: python-coverage
+
+      - name: Download Go coverage artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: go-coverage-${{ github.run_id }}
+          path: go-coverage
+
+      - name: Download Dart coverage artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: dart-coverage-${{ github.run_id }}
+          path: dart-coverage
+
+      - name: Download C++ coverage artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: cpp-coverage-${{ github.run_id }}
+          path: cpp-coverage
+
+      - uses: goldenm-software/layrz-actions/.github/actions/coverage-comment@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          enable-python: true
+          python-coverage-path: python-coverage/coverage.json
+          enable-go: true
+          go-coverage-path: go-coverage/coverage-summary.txt
+          enable-dart: true
+          dart-coverage-path: dart-coverage/lcov.info
+          enable-cpp: true
+          cpp-coverage-path: cpp-coverage/lcov.info
+
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: { fetch-depth: 0 }
+
+      - uses: goldenm-software/layrz-actions/.github/actions/changelog@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          post-comment: true

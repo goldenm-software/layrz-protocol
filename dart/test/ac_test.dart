@@ -2,6 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes AcPacket', () {
+    final original = AcPacket(commands: [Command(commandId: '1', commandName: 'ping', args: {})]);
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<AcPacket>());
+  });
+
   test('AcPacket.parse()', () {
     Command cmd1 = Command(commandId: '1', commandName: 'get_msg', args: {});
 
@@ -34,11 +40,5 @@ void main() {
 
     String reversedPayload = link.toPacket();
     expect(reversedPayload, payload);
-
-    print(
-      AcPacket(
-        commands: [Command(commandId: '1', commandName: 'ping', args: {})],
-      ).toPacket(),
-    );
   });
 }

@@ -31,7 +31,7 @@ class PmPacket extends ClientPacket {
     }
 
     int? receivedCrc = int.tryParse(parts[3], radix: 16);
-    int? calculatedCrc = calculateCrc("${parts.sublist(0, 1).join(';')};".codeUnits);
+    int? calculatedCrc = calculateCrc("${parts.sublist(0, parts.length - 1).join(';')};".codeUnits);
 
     if (receivedCrc != calculatedCrc) {
       throw CrcException('Invalid CRC, received: $receivedCrc, calculated: $calculatedCrc');

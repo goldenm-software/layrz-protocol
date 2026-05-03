@@ -2,6 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:layrz_protocol/layrz_protocol.dart';
 
 void main() {
+  test('Packet.fromPacket() routes AbPacket', () {
+    final original = AbPacket(devices: []);
+    final parsed = Packet.fromPacket(original.toPacket());
+    expect(parsed, isA<AbPacket>());
+  });
+
   test('AbPacket.parse()', () {
     String payload = "<Ab>1234567890AB:GENERIC;BC0987654321:GENERIC;C1BE</Ab>";
 

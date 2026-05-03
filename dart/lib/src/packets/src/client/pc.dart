@@ -7,7 +7,7 @@ class PcPacket extends ClientPacket {
 
   /// [commandId] is the command ID that is being ACKed.
   /// This is identified in the packet as `CMD_ID`
-  final String commandId;
+  final int commandId;
 
   /// [message] is the message of the ACK.
   /// This is identified in the packet as `MSG`
@@ -44,14 +44,21 @@ class PcPacket extends ClientPacket {
 
     DateTime timestamp;
     try {
-      timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(parts[0]) * 1000);
+      timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(parts[0]) * 1000, isUtc: true);
     } catch (e) {
       throw MalformedException('Invalid timestamp');
     }
 
+    int commandId;
+    try {
+      commandId = int.parse(parts[1]);
+    } catch (e) {
+      throw MalformedException('Invalid command_id, should be an int');
+    }
+
     return PcPacket(
       timestamp: timestamp,
-      commandId: parts[1],
+      commandId: commandId,
       message: parts[2],
     );
   }
@@ -71,7 +78,7 @@ class PcPacket extends ClientPacket {
   @override
   PcPacket copyWith({
     DateTime? timestamp,
-    String? commandId,
+    int? commandId,
     String? message,
   }) {
     return PcPacket(

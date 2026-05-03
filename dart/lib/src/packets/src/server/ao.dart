@@ -32,11 +32,11 @@ class AoPacket extends ServerPacket {
       throw CrcException('Invalid CRC, received: $receivedCrc, calculated: $calculatedCrc');
     }
 
-    try {
-      return AoPacket(timestamp: DateTime.parse(parts[0]));
-    } catch (e) {
-      throw ParseException('Invalid timestamp');
+    int? seconds = int.tryParse(parts[0]);
+    if (seconds == null) {
+      throw MalformedException('Invalid timestamp, should be an integer');
     }
+    return AoPacket(timestamp: DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true));
   }
 
   /// [toPacket] returns the packet in the format of `Layrz Protocol v3`.

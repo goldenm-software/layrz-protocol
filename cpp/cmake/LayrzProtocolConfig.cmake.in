@@ -1,0 +1,26 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/LayrzProtocolTargets.cmake")
+
+# Components: core (default), net (optional)
+# find_package(LayrzProtocol REQUIRED COMPONENTS net) will require both targets.
+set(_LayrzProtocol_known_components core net)
+set(_LayrzProtocol_optional_components net)
+
+foreach(_comp IN LISTS LayrzProtocol_FIND_COMPONENTS)
+    if(NOT _comp IN_LIST _LayrzProtocol_known_components)
+        set(LayrzProtocol_FOUND FALSE)
+        set(LayrzProtocol_NOT_FOUND_MESSAGE "Unknown component: ${_comp}")
+        return()
+    endif()
+    if(NOT TARGET layrz::protocol::${_comp})
+        if(LayrzProtocol_FIND_REQUIRED_${_comp})
+            set(LayrzProtocol_FOUND FALSE)
+            set(LayrzProtocol_NOT_FOUND_MESSAGE
+                "LayrzProtocol component '${_comp}' requested but not installed (was library built with LAYRZ_PROTOCOL_BUILD_NET=ON?)")
+            return()
+        endif()
+    endif()
+endforeach()
+
+check_required_components(layrz_protocol_core)

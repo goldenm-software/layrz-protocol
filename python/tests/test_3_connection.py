@@ -9,8 +9,9 @@ from layrz_protocol.constants import UTC
 from layrz_protocol.packets import PdPacket, Position
 
 
+@pytest.mark.skip(reason='integration test requires a live Layrz server')
 def test3_base() -> None:
-  client = LayrzProtocol(ident='link_test')
+  client = LayrzProtocol(ident='link_test', base_url='http://localhost')
   msg = PdPacket(
     timestamp=datetime.now(UTC),
     position=Position(latitude=10.0, longitude=10.0, speed=10.0),

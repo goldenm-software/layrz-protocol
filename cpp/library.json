@@ -1,0 +1,32 @@
+{
+  "name": "layrz-protocol",
+  "version": "3.1.0",
+  "description": "Layrz Link Protocol — packet codec for Arduino, ESP-IDF, and desktop C++17",
+  "keywords": ["layrz", "protocol", "iot", "gps", "tracker"],
+  "license": "Apache-2.0",
+  "homepage": "https://developers.layrz.com/protocol/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goldenm-software/layrz-protocol"
+  },
+  "frameworks": ["arduino", "espidf"],
+  "platforms": "*",
+  "headers": "layrz_protocol/layrz_protocol.hpp",
+  "build": {
+    "includeDir": "include",
+    "srcDir": "src",
+    "srcFilter": [
+      "-<*>",
+      "+<crc.cpp>",
+      "+<extras.cpp>",
+      "+<float_repr.cpp>",
+      "+<parser.cpp>",
+      "+<ble/>",
+      "+<packets/>"
+    ],
+    "flags": ["-std=gnu++17"]
+  },
+  "export": {
+    "exclude": ["build", "tests", "examples", "scripts", "cmake"]
+  }
+}

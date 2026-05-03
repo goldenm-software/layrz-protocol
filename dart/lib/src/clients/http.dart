@@ -27,16 +27,19 @@ class LayrzProtocolHttp {
     this.password = '',
     required this.server,
     this.version = LayrzProtocolVersion.v2,
+    @visibleForTesting Dio? testDio,
   }) : assert(ident.isNotEmpty) {
     _baseUrl = server;
-    _dio = Dio(
-      BaseOptions(
-        baseUrl: baseUrl,
-        headers: headers,
-        responseDecoder: (bytes, options, responseBody) => utf8.decode(bytes, allowMalformed: true),
-        requestEncoder: (data, options) => utf8.encode(data),
-      ),
-    );
+    _dio =
+        testDio ??
+        Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            headers: headers,
+            responseDecoder: (bytes, options, responseBody) => utf8.decode(bytes, allowMalformed: true),
+            requestEncoder: (data, options) => utf8.encode(data),
+          ),
+        );
   }
 
   late final Dio _dio;

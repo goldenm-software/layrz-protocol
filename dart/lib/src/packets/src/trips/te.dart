@@ -52,7 +52,7 @@ class TePacket extends TripsPacket {
 
     DateTime timestamp;
     try {
-      timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(parts[0]) * 1000);
+      timestamp = DateTime.fromMillisecondsSinceEpoch(int.parse(parts[0]) * 1000, isUtc: true);
     } catch (e) {
       throw MalformedException('Invalid timestamp');
     }
@@ -92,7 +92,7 @@ class TePacket extends TripsPacket {
   String toPacket() {
     String payload = '${(timestamp.millisecondsSinceEpoch / 1000).round()};';
     payload += '$tripId;';
-    payload += ';${distanceTraveled.toStringAsFixed(3)};';
+    payload += '${distanceTraveled.toStringAsFixed(3)};';
     payload += '${maxSpeed.toStringAsFixed(3)};';
     payload += '${duration.inSeconds};';
     String crc = calculateCrc(payload.codeUnits).toRadixString(16).padLeft(4, '0').toUpperCase();
