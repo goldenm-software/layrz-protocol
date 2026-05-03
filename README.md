@@ -1,5 +1,7 @@
 # Layrz Protocol Monorepo
 
+[![Checks](https://github.com/goldenm-software/layrz-protocol/actions/workflows/checks.yaml/badge.svg?branch=development)](https://github.com/goldenm-software/layrz-protocol/actions/workflows/checks.yaml)
+
 This is the monorepo for the Layrz Protocol. It contains the support of Layrz Protocol on the following languages:
 
 | Language | Minimum version required | Package import | Status |

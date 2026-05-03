@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Breaking changes (Go)
+- `CommandDefinition.Args`, `PdPacket.ExtraData`, and `PsPacket.Params` changed from `*map[string]any` to `map[string]any`. Callers must drop `&` on assignment and `*` on read. Ranging over a nil map is safe (zero iterations).
+
 ## 3.1.0
 
 - Added full C++ implementation (`cpp/`) with CMake C++17 build, covering all packet types (`Pa`, `Pb`, `Pc`, `Pd`, `Pi`, `Pm`, `Pr`, `Ps`, `Ab`, `Ac`, `Ao`, `Ar`, `As`, `Au`, `Ts`, `Te`, `Im`), CRC-16/X-25, BLE advertisement codec, extras parser, and HTTP/TCP transports
