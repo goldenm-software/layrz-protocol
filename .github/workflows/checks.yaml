@@ -63,7 +63,7 @@ jobs:
           run-tests: true
           artifact-name: 'cpp-coverage-${{ github.run_id }}'
 
-  coverage-comment:
+  coverage:
     needs: [lint-python, lint-go, lint-dart, lint-cpp]
     if: always() && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -96,9 +96,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           enable-python: true
-          python-coverage-path: python-coverage/coverage.json
+          python-coverage-path: python-coverage/lcov.info
           enable-go: true
-          go-coverage-path: go-coverage/coverage-summary.txt
+          go-coverage-path: go-coverage/lcov.info
           enable-dart: true
           dart-coverage-path: dart-coverage/lcov.info
           enable-cpp: true
