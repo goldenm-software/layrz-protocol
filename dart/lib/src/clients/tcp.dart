@@ -82,11 +82,24 @@ class LayrzProtocolSocket {
   /// It is used to send and receive messages.
   Socket? _socket;
 
+  /// [_resolveHost] resolves the host, preferring IPv6 (AAAA) over IPv4 (A).
+  Future<InternetAddress> _resolveHost() async {
+    final addresses = await InternetAddress.lookup(_host);
+    final ipv6 = addresses.firstWhereOrNull((addr) => addr.type == InternetAddressType.IPv6);
+    if (ipv6 != null) {
+      Log.info("Resolved host $_host to IPv6 address: ${ipv6.address}");
+      return ipv6;
+    }
+    Log.info("Resolved host $_host to IPv4 address: ${addresses.first.address}");
+    return addresses.first;
+  }
+
   /// [connect] connects to the server.
   Future<bool> connect({Duration timeout = const Duration(seconds: 5)}) async {
     try {
       Completer<bool> completer = Completer<bool>();
-      _socket = await Socket.connect(_host, _port, timeout: timeout);
+      final address = await _resolveHost();
+      _socket = await Socket.connect(address, _port, timeout: timeout);
       _eventController.add(TcpConnected());
       _socket!.listen(
         (List<int> event) {
@@ -107,7 +120,7 @@ class LayrzProtocolSocket {
               final parsedPacket = Packet.fromPacket(packet);
               if (parsedPacket is AuPacket) {
                 LayrzLogging.info('AuPacket deprecated, skipping');
-                return;
+                continue;
               }
 
               if (parsedPacket is AsPacket) {
