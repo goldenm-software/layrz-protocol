@@ -9,6 +9,8 @@ import (
 	"github.com/goldenm-software/layrz-protocol/go/v3/packets/client"
 )
 
+func fp(v float64) *float64 { return &v }
+
 func TestPb_FromPacket_ToPacket(t *testing.T) {
 	tests := []struct {
 		name string
@@ -20,9 +22,9 @@ func TestPb_FromPacket_ToPacket(t *testing.T) {
 				{
 					MacAddress:       "AA:BB:CC:DD:EE:FF",
 					Timestamp:        fixedTime,
-					Latitude:         19.43,
-					Longitude:        -99.18,
-					Altitude:         2240.0,
+					Latitude:         fp(19.43),
+					Longitude:        fp(-99.18),
+					Altitude:         fp(2240.0),
 					Rssi:             -50,
 					TxPower:          -5,
 					Model:            "GENERIC",
@@ -38,9 +40,9 @@ func TestPb_FromPacket_ToPacket(t *testing.T) {
 				{
 					MacAddress: "11:22:33:44:55:66",
 					Timestamp:  fixedTime,
-					Latitude:   10.0,
-					Longitude:  20.0,
-					Altitude:   100.0,
+					Latitude:   fp(10.0),
+					Longitude:  fp(20.0),
+					Altitude:   fp(100.0),
 					Rssi:       -60,
 					TxPower:    0,
 					Model:      "MODEL1",
@@ -83,9 +85,9 @@ func TestPb_FromPacket_Errors(t *testing.T) {
 	ads := []definitions.BleAdvertisement{{
 		MacAddress:       "AA:BB:CC:DD:EE:FF",
 		Timestamp:        fixedTime,
-		Latitude:         19.43,
-		Longitude:        -99.18,
-		Altitude:         2240.0,
+		Latitude:         fp(19.43),
+		Longitude:        fp(-99.18),
+		Altitude:         fp(2240.0),
 		Rssi:             -50,
 		TxPower:          0,
 		Model:            "GENERIC",

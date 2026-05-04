@@ -87,19 +87,31 @@ func (p *PbPacket) FromPacket(raw *string) error {
 
 		timestamp := time.Unix(timestampInt, 0)
 
-		latitude, err := strconv.ParseFloat(rawLatitude, 64)
-		if err != nil {
-			return errors.New("cannot convert latitude to float")
+		var latitude *float64
+		if rawLatitude != "" {
+			v, err := strconv.ParseFloat(rawLatitude, 64)
+			if err != nil {
+				return errors.New("cannot convert latitude to float")
+			}
+			latitude = &v
 		}
 
-		longitude, err := strconv.ParseFloat(rawLongitude, 64)
-		if err != nil {
-			return errors.New("cannot convert longitude to float")
+		var longitude *float64
+		if rawLongitude != "" {
+			v, err := strconv.ParseFloat(rawLongitude, 64)
+			if err != nil {
+				return errors.New("cannot convert longitude to float")
+			}
+			longitude = &v
 		}
 
-		altitude, err := strconv.ParseFloat(rawAltitude, 64)
-		if err != nil {
-			return errors.New("cannot convert altitude to float")
+		var altitude *float64
+		if rawAltitude != "" {
+			v, err := strconv.ParseFloat(rawAltitude, 64)
+			if err != nil {
+				return errors.New("cannot convert altitude to float")
+			}
+			altitude = &v
 		}
 
 		rssi, err := strconv.Atoi(rawRssi)
@@ -171,7 +183,7 @@ func (p *PbPacket) FromPacket(raw *string) error {
 		}
 
 		advertisements = append(advertisements, definitions.BleAdvertisement{
-			MacAddress:       rawMacAddress,
+			MacAddress:       normalizeMac(rawMacAddress),
 			Timestamp:        timestamp,
 			Latitude:         latitude,
 			Longitude:        longitude,
@@ -207,13 +219,29 @@ func (p *PbPacket) ToPacket() *string {
 	return &content
 }
 
+// normalizeMac converts a MAC address to uppercase colon-separated format (AA:BB:CC:DD:EE:FF).
+func normalizeMac(mac string) string {
+	mac = strings.ToUpper(strings.ReplaceAll(mac, ":", ""))
+	if len(mac) != 12 {
+		return mac
+	}
+	return mac[0:2] + ":" + mac[2:4] + ":" + mac[4:6] + ":" + mac[6:8] + ":" + mac[8:10] + ":" + mac[10:12]
+}
+
+func formatCoord(v *float64) string {
+	if v == nil {
+		return ""
+	}
+	return fmt.Sprintf("%f", *v)
+}
+
 func (p *PbPacket) composeAdvertisement(advertisement definitions.BleAdvertisement) string {
 	content := ""
 	content += advertisement.MacAddress + ";"
 	content += strconv.FormatInt(advertisement.Timestamp.Unix(), 10) + ";"
-	content += fmt.Sprintf("%f", advertisement.Latitude) + ";"
-	content += fmt.Sprintf("%f", advertisement.Longitude) + ";"
-	content += fmt.Sprintf("%f", advertisement.Altitude) + ";"
+	content += formatCoord(advertisement.Latitude) + ";"
+	content += formatCoord(advertisement.Longitude) + ";"
+	content += formatCoord(advertisement.Altitude) + ";"
 	content += advertisement.Model + ";"
 	content += advertisement.DeviceName + ";"
 	content += strconv.Itoa(advertisement.Rssi) + ";"
