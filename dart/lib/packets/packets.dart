@@ -3,34 +3,36 @@ library;
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:layrz_logging/layrz_logging.dart';
-import 'package:layrz_protocol/layrz_protocol.dart';
-import 'package:layrz_protocol/src/utils/constants.dart';
+import 'package:layrz_protocol/utils/errors.dart';
+import 'package:layrz_protocol/utils/crc.dart';
+import 'package:layrz_protocol/utils/constants.dart';
 
-part 'src/client/pi.dart';
-part 'src/client/pd.dart';
-part 'src/client/pc.dart';
-part 'src/client/ps.dart';
-part 'src/client/pb.dart';
-part 'src/client/pa.dart';
-part 'src/client/pr.dart';
-part 'src/client/pm.dart';
+part 'client/pi.dart';
+part 'client/pd.dart';
+part 'client/pc.dart';
+part 'client/ps.dart';
+part 'client/pb.dart';
+part 'client/pa.dart';
+part 'client/pr.dart';
+part 'client/pm.dart';
 
-part 'src/trips/ts.dart';
-part 'src/trips/te.dart';
+part 'trips/ts.dart';
+part 'trips/te.dart';
 
-part 'src/server/ao.dart';
-part 'src/server/ac.dart';
-part 'src/server/ar.dart';
-part 'src/server/ab.dart';
-part 'src/server/as.dart';
-part 'src/server/au.dart';
+part 'server/ao.dart';
+part 'server/ac.dart';
+part 'server/ar.dart';
+part 'server/ab.dart';
+part 'server/as.dart';
+part 'server/au.dart';
 
-part 'src/ai/im.dart';
+part 'ai/im.dart';
 
-part 'src/utils/command.dart';
-part 'src/utils/position.dart';
-part 'src/utils/ble_advertisement.dart';
+part 'utils/command.dart';
+part 'utils/position.dart';
+part 'utils/ble_advertisement.dart';
+part 'utils/ble_models.dart';
+part 'utils/firmware_branch.dart';
 
 class Packet {
   static Packet fromPacket(String raw) {
@@ -60,8 +62,32 @@ class Packet {
     // AI packets
     if (raw.startsWith('<Im>') && raw.endsWith('</Im>')) return ImPacket.fromPacket(raw);
 
-    LayrzLogging.critical('Invalid packet: $raw');
+    // ignore: avoid_print
+    print('Invalid packet: $raw');
     throw MalformedException('Invalid packet type');
+  }
+
+  static ClientPacket decodeClientPacket(String raw) {
+    raw = raw.trim();
+    if (raw.startsWith('<Pc>') && raw.endsWith('</Pc>')) return PcPacket.fromPacket(raw);
+    if (raw.startsWith('<Pi>') && raw.endsWith('</Pi>')) return PiPacket.fromPacket(raw);
+    if (raw.startsWith('<Pd>') && raw.endsWith('</Pd>')) return PdPacket.fromPacket(raw);
+    if (raw.startsWith('<Ps>') && raw.endsWith('</Ps>')) return PsPacket.fromPacket(raw);
+    if (raw.startsWith('<Pb>') && raw.endsWith('</Pb>')) return PbPacket.fromPacket(raw);
+    if (raw.startsWith('<Pa>') && raw.endsWith('</Pa>')) return PaPacket.fromPacket(raw);
+    if (raw.startsWith('<Pr>') && raw.endsWith('</Pr>')) return PrPacket.fromPacket(raw);
+    if (raw.startsWith('<Pm>') && raw.endsWith('</Pm>')) return PmPacket.fromPacket(raw);
+    throw MalformedException('Invalid client packet: $raw');
+  }
+
+  static ServerPacket decodeServerPacket(String raw) {
+    raw = raw.trim();
+    if (raw.startsWith('<Ao>') && raw.endsWith('</Ao>')) return AoPacket.fromPacket(raw);
+    if (raw.startsWith('<Ac>') && raw.endsWith('</Ac>')) return AcPacket.fromPacket(raw);
+    if (raw.startsWith('<Ar>') && raw.endsWith('</Ar>')) return ArPacket.fromPacket(raw);
+    if (raw.startsWith('<Ab>') && raw.endsWith('</Ab>')) return AbPacket.fromPacket(raw);
+    if (raw.startsWith('<As>') && raw.endsWith('</As>')) return AsPacket.fromPacket(raw);
+    throw MalformedException('Invalid server packet: $raw');
   }
 
   String toPacket() => '';

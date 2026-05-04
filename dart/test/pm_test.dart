@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_protocol/layrz_protocol.dart';
+import 'package:layrz_protocol/utils/errors.dart';
+import 'package:test/test.dart';
+import 'package:layrz_protocol/packets/packets.dart';
+import 'package:layrz_protocol/utils/crc.dart';
 
 void main() {
   test('Packet.fromPacket() routes PmPacket', () {

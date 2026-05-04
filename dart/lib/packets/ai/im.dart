@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class ImPacket extends AIPacket {
   /// [timestamp] is the time of the packet.

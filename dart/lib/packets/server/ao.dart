@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class AoPacket extends ServerPacket {
   final DateTime timestamp;

@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class PmPacket extends ClientPacket {
   /// [filename] is the name of the file.

@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class TePacket extends TripsPacket {
   /// [timestamp] is the time of the packet.

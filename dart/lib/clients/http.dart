@@ -1,4 +1,18 @@
-part of '../../layrz_protocol.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
+
+import 'package:layrz_protocol/packets/packets.dart';
+import 'package:layrz_protocol/utils/errors.dart';
+import 'package:layrz_protocol/utils/protocol.dart';
+
+export 'package:layrz_protocol/packets/packets.dart';
+export 'package:layrz_protocol/utils/errors.dart';
+export 'package:layrz_protocol/utils/protocol.dart';
+
+typedef HttpPacketResponse = Future<Packet>;
 
 class LayrzProtocolHttp {
   /// [ident] is the identifier of the device, this [ident] should exists in the Layrz ecosystem.

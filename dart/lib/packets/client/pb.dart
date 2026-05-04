@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class PbPacket extends ClientPacket {
   /// [advertisements] is the list of advertisements detected by the device.

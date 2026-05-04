@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class AsPacket extends ServerPacket {
   /// [AsPacket] is the authentication success packet.

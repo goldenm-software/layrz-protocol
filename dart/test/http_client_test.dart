@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_protocol/layrz_protocol.dart';
+import 'package:test/test.dart';
+import 'package:layrz_protocol/clients/http.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockDio extends Mock implements Dio {}

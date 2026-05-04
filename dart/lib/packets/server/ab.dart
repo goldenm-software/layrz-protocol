@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class AbPacket extends ServerPacket {
   final List<BleData> devices;

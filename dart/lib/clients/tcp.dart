@@ -1,200 +1,157 @@
 // coverage:ignore-file
-part of '../../layrz_protocol.dart';
+import 'dart:io';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:collection/collection.dart';
+import 'package:logging/logging.dart';
+
+import '../packets/packets.dart';
+import '../utils/protocol.dart';
+
+export '../packets/packets.dart';
+export '../utils/errors.dart';
+export '../utils/protocol.dart';
+
+final Logger _log = Logger('layrz_protocol.tcp');
+
+/// Callback invoked when the socket is disconnected and a packet needs to be queued.
+/// The consumer is responsible for persisting [packet] for later replay.
+typedef BlackboxStoreCallback = Future<void> Function(String packet);
+
+/// Callback invoked on reconnect to retrieve all queued packets.
+/// The consumer should return the stored packets and clear their store.
+typedef BlackboxFetchCallback = Future<List<String>> Function();
 
 class LayrzProtocolSocket {
-  /// [ident] is the identifier of the device, this [ident] should exists in the Layrz ecosystem.
   final String ident;
-
-  /// [password] is the password of the device, this [password] can be empty if the device does not have a password.
   final String password;
-
-  /// [httpUrl] defines the URL of the endpoint to interact with the comm interface.
   final String server;
-
-  /// [version] is the version of the protocol.
   final LayrzProtocolVersion version;
 
-  /// [LayrzProtocolSocket] is the class that contains the methods to interact with the Layrz ecosystem.
-  ///
-  /// Also, all of them may throw an exception if something goes wrong:
-  /// - [ServerException] if the server returns an error 500.
-  /// - [MalformedException] if the message is malformed, or when the server returns an unexpected response.
-  /// - [ParseException] if the message is not well formatted.
-  /// - [CrcException] if the CRC is not valid.
-  /// - [CommandException] if the command is not well formatted.
+  /// Called when a packet needs to be saved to the Blackbox (socket is down).
+  final BlackboxStoreCallback? onBlackboxStore;
+
+  /// Called on reconnect to retrieve and flush queued Blackbox packets.
+  final BlackboxFetchCallback? onBlackboxFetch;
+
   LayrzProtocolSocket({
     required this.ident,
     this.password = '',
     required this.server,
     this.version = LayrzProtocolVersion.v2,
-    @visibleForTesting bool skipDatabase = false,
+    this.onBlackboxStore,
+    this.onBlackboxFetch,
   }) : assert(ident.isNotEmpty) {
     if (server.contains(':')) {
       _host = server.split(':')[0];
       _port = int.tryParse(server.split(':')[1]) ?? 0;
-      if (_port <= 0) {
-        throw ArgumentError('The port should be a number and greater than 0');
-      }
+      if (_port <= 0) throw ArgumentError('The port should be a number and greater than 0');
     } else {
       throw ArgumentError('The server should contain the port');
     }
-
-    if (skipDatabase) {
-      _db = null;
-    } else {
-      try {
-        _db = LinkDatabase();
-      } catch (_) {
-        LayrzLogging.critical('Error initializing the database, continuing without Blackbox support');
-        _db = null;
-      }
-    }
   }
 
-  /// [_db] is the database to store the messages (Blackbox)
-  LinkDatabase? _db;
-
-  /// [blackboxSending] refers to the state of Blackbox processing.
   static bool blackboxSending = false;
-
-  /// [_eventController] is the controller of the events.
-  final _eventController = StreamController<LayrzTcpEvent>.broadcast();
-
-  /// [onEvent] is the stream of events.
-  Stream<LayrzTcpEvent> get onEvent => _eventController.stream;
-
-  /// [isActive] indicates if the service is enabled.
-  /// This is used to avoid miss-savings on blackbox
   static bool isActive = false;
 
-  /// [splitRegExp] is the regular expression to split the packets.
-  /// Sometimes, the socket connection sent multiple packets at once.
+  final _eventController = StreamController<LayrzTcpEvent>.broadcast();
+  Stream<LayrzTcpEvent> get onEvent => _eventController.stream;
+
   RegExp get splitRegExp => RegExp(r'(?=<(?:A\w{1})>)');
 
-  /// [_port] is the port of the server.
-  /// This should be a number greater than 0.
   late int _port;
-
-  /// [_host] is the host of the server.
-  /// This should be a valid hostname or IP address.
   late String _host;
-
-  /// [_socket] is the socket connection to the server.
-  /// It is used to send and receive messages.
   Socket? _socket;
 
-  /// [_resolveHost] resolves the host, preferring IPv6 (AAAA) over IPv4 (A).
   Future<InternetAddress> _resolveHost() async {
     final addresses = await InternetAddress.lookup(_host);
     final ipv6 = addresses.firstWhereOrNull((addr) => addr.type == InternetAddressType.IPv6);
     if (ipv6 != null) {
-      Log.info("Resolved host $_host to IPv6 address: ${ipv6.address}");
+      _log.info('Resolved host $_host to IPv6: ${ipv6.address}');
       return ipv6;
     }
-    Log.info("Resolved host $_host to IPv4 address: ${addresses.first.address}");
+    _log.info('Resolved host $_host to IPv4: ${addresses.first.address}');
     return addresses.first;
   }
 
-  /// [connect] connects to the server.
   Future<bool> connect({Duration timeout = const Duration(seconds: 5)}) async {
     try {
-      Completer<bool> completer = Completer<bool>();
+      final completer = Completer<bool>();
       final address = await _resolveHost();
       _socket = await Socket.connect(address, _port, timeout: timeout);
       _eventController.add(TcpConnected());
       _socket!.listen(
         (List<int> event) {
-          String raw = utf8.decode(event);
-
-          final packets = raw
-              .split(splitRegExp)
-              .where((message) {
-                return message.isNotEmpty;
-              })
-              .map((message) {
-                return message.trim();
-              })
-              .toList();
+          final raw = utf8.decode(event);
+          final packets = raw.split(splitRegExp).where((m) => m.isNotEmpty).map((m) => m.trim()).toList();
 
           for (final packet in packets) {
             try {
-              final parsedPacket = Packet.fromPacket(packet);
-              if (parsedPacket is AuPacket) {
-                LayrzLogging.info('AuPacket deprecated, skipping');
+              final parsed = Packet.fromPacket(packet);
+              if (parsed is AuPacket) {
+                _log.info('AuPacket deprecated, skipping');
                 continue;
               }
-
-              if (parsedPacket is AsPacket) {
+              if (parsed is AsPacket) {
                 LayrzProtocolSocket.isActive = true;
                 if (!completer.isCompleted) completer.complete(true);
               }
-              _eventController.add(MessageReceived(message: parsedPacket));
+              _eventController.add(MessageReceived(message: parsed));
             } catch (e) {
-              LayrzLogging.critical('Error parsing packet: "$packet" - $e');
+              _log.severe('Error parsing packet: "$packet" - $e');
               disconnect();
             }
           }
         },
         onError: (err) async {
-          LayrzLogging.debug('------------------> onError $err');
+          _log.fine('onError: $err');
           await disconnect();
         },
         onDone: () async {
-          LayrzLogging.debug('------------------> onDone');
+          _log.fine('onDone');
           await disconnect();
         },
       );
 
-      final auth = PaPacket(ident: ident, password: password).toPacket();
-      _socket!.writeln(auth);
+      _socket!.writeln(PaPacket(ident: ident, password: password).toPacket());
 
       return await completer.future.timeout(
         timeout,
         onTimeout: () {
-          if (!completer.isCompleted) {
-            completer.complete(false);
-          }
+          if (!completer.isCompleted) completer.complete(false);
           return false;
         },
       );
     } catch (e) {
-      LayrzLogging.critical('Error connecting to the server: $e');
+      _log.severe('Error connecting to the server: $e');
       _eventController.add(TcpDisconnected());
       LayrzProtocolSocket.isActive = false;
       return false;
     }
   }
 
-  /// [disconnect] disconnects from the server.
   Future<bool> disconnect() async {
     LayrzProtocolSocket.isActive = false;
-    LayrzLogging.info('Disconnecting from the server');
+    _log.info('Disconnecting from the server');
     await _socket?.close();
     _socket?.destroy();
     _socket = null;
     _eventController.add(TcpDisconnected());
-    LayrzLogging.info('Disconnected from the server');
+    _log.info('Disconnected from the server');
     return true;
   }
 
-  /// [sendData] sends a plain message to the Layrz ecosystem.
   Future<void> sendData(ClientPacket message) async {
     if (_socket == null) {
-      LayrzLogging.warning('The socket is not connected, saving on Blackbox');
-      if (_db == null) {
-        LayrzLogging.warning('Blackbox is not initialized, ignoring message');
+      _log.warning('Socket not connected, saving to Blackbox');
+      final store = onBlackboxStore;
+      if (store == null) {
+        _log.warning('No Blackbox store callback, ignoring message');
         return;
       }
-      await _db!
-          .into(_db!.messages)
-          .insert(
-            MessagesCompanion.insert(
-              message: message.toPacket(),
-              createdAt: DateTime.now(),
-            ),
-          );
-
-      LayrzLogging.info('Saved on Blackbox');
+      await store(message.toPacket());
+      _log.info('Saved to Blackbox');
       return;
     }
 
@@ -202,77 +159,59 @@ class LayrzProtocolSocket {
     try {
       _socket?.writeln(packet);
     } catch (e) {
-      LayrzLogging.critical('Error sending packet: $packet - $e');
+      _log.severe('Error sending packet: $packet - $e');
       await disconnect();
     }
 
-    _validateAndSendBlackbox();
+    _flushBlackbox();
   }
 
-  /// [_validateAndSendBlackbox] validates if the service is enabled and sends the messages on the Blackbox.
-  void _validateAndSendBlackbox() async {
+  void _flushBlackbox() async {
     if (!LayrzProtocolSocket.isActive) {
-      LayrzLogging.warning('Service is not enabled, ignoring Blackbox');
+      _log.warning('Service not active, skipping Blackbox flush');
       return;
     }
 
-    if (_db == null) {
-      LayrzLogging.warning('Blackbox is not initialized, ignoring message');
-      return;
-    }
+    final fetch = onBlackboxFetch;
+    if (fetch == null) return;
 
     if (LayrzProtocolSocket.blackboxSending) return;
-
     LayrzProtocolSocket.blackboxSending = true;
-    final messages = await _db!.select(_db!.messages).get();
-    if (messages.isEmpty) return;
 
-    LayrzLogging.info('Sending ${messages.length} messages from Blackbox');
-    for (final message in messages) {
-      final packet = Packet.fromPacket(message.message);
-      if (packet is ClientPacket) {
-        await sendData(packet);
-      }
-      await _db!.delete(_db!.messages).delete(message);
+    final messages = await fetch();
+    if (messages.isEmpty) {
+      LayrzProtocolSocket.blackboxSending = false;
+      return;
+    }
+
+    _log.info('Flushing ${messages.length} messages from Blackbox');
+    for (final raw in messages) {
+      final packet = Packet.fromPacket(raw);
+      if (packet is ClientPacket) await sendData(packet);
     }
 
     LayrzProtocolSocket.blackboxSending = false;
   }
 
-  /// [sendSos] sends an SOS message to the Layrz ecosystem.
   Future<void> sendSos([PdPacket? message]) {
-    PdPacket msg = message ?? composeEmptyPd();
-    Map<String, dynamic> extra = {...msg.extra};
-    extra['alarm.event'] = true;
-    msg = msg.copyWith(extra: extra);
+    final msg = (message ?? composeEmptyPd()).copyWith(
+      extra: {
+        ...(message ?? composeEmptyPd()).extra,
+        'alarm.event': true,
+      },
+    );
     return sendData(msg);
   }
 
-  /// [sendImage] sends an image to the Layrz ecosystem.
   Future<void> sendImage({
-    /// [bytes] is the list of bytes of the image.
     required List<int> bytes,
-
-    /// [filename] is the name of the file without the extension.
     required String filename,
-
-    /// [contentType] is the content type of the image.
-    /// By default is 'image/jpeg'.
     String contentType = 'image/jpeg',
-  }) async {
-    final packet = PmPacket(
-      filename: filename,
-      contentType: contentType,
-      data: Uint8List.fromList(bytes),
-    );
-
-    return sendData(packet);
+  }) {
+    return sendData(PmPacket(filename: filename, contentType: contentType, data: Uint8List.fromList(bytes)));
   }
 
-  /// [composeEmptyPd] composes an empty PdPacket with the current timestamp and a default position.
-  PdPacket composeEmptyPd() {
-    return PdPacket(timestamp: DateTime.now(), position: Position(), extra: {});
-  }
+  PdPacket composeEmptyPd() => PdPacket(timestamp: DateTime.now(), position: Position(), extra: {});
 }
 
 abstract class LayrzTcpEvent {

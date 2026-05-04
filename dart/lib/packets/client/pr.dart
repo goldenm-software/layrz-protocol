@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class PrPacket extends ClientPacket {
   /// [PrPacket] is the authentication success packet.

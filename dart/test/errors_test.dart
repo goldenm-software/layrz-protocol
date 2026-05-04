@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_protocol/layrz_protocol.dart';
+import 'package:layrz_protocol/utils/errors.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('ParseException.toString()', () {

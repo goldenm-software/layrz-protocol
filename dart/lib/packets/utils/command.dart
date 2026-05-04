@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class Command {
   /// [commandId] is the Layrz ID to refer to this command.
@@ -95,17 +95,19 @@ class Command {
   String toPacket() {
     String payload = '$commandId;$commandName;';
 
-    payload += args.entries.map((e) {
-      if (e.value is bool) {
-        return '${e.key}:${e.value ? 'true' : 'false'}';
-      } else if (e.value is int) {
-        return '${e.key}:${e.value}';
-      } else if (e.value is double) {
-        return '${e.key}:${e.value}';
-      } else {
-        return '${e.key}:${e.value}';
-      }
-    }).join(',');
+    payload += args.entries
+        .map((e) {
+          if (e.value is bool) {
+            return '${e.key}:${e.value ? 'true' : 'false'}';
+          } else if (e.value is int) {
+            return '${e.key}:${e.value}';
+          } else if (e.value is double) {
+            return '${e.key}:${e.value}';
+          } else {
+            return '${e.key}:${e.value}';
+          }
+        })
+        .join(',');
 
     payload += ';';
 

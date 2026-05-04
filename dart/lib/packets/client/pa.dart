@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class PaPacket extends ClientPacket {
   /// [ident] is the Unique identifier, sent as part of the packet as `IMEI`

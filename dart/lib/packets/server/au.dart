@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 @Deprecated('This packet is deprecated and will be removed in v4.0')
 class AuPacket extends ServerPacket {

@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class AcPacket extends ServerPacket {
   final List<Command> commands;

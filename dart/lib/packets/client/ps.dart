@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class PsPacket extends ClientPacket {
   /// [timestamp] is the time of the packet.

@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class BleData {
   /// [macAddress] is the detected Mac Address. This Mac Adress came from the detected device, not the
@@ -296,7 +296,7 @@ extension LayrzProtocolManufacturerDataSpec on BleManufacturerData {
   /// MANUFACTURER_ID:DATA
   String toPacket() {
     String message = '${companyId.toRadixString(16).padLeft(4, '0').toUpperCase()}:';
-    message += (data ?? []).map((e) => e.toRadixString(16).padLeft(2, '0')).join('').toUpperCase();
+    message += data.map((e) => e.toRadixString(16).padLeft(2, '0')).join('').toUpperCase();
     return message;
   }
 }
@@ -306,7 +306,7 @@ extension LayrzProtocolServiceDataSpec on BleServiceData {
   /// SERVICE_UUID:DATA
   String toPacket() {
     String message = '${uuid.toRadixString(16).padLeft(4, '0').toUpperCase()}:';
-    message += (data ?? []).map((e) => e.toRadixString(16).padLeft(2, '0')).join('').toUpperCase();
+    message += data.map((e) => e.toRadixString(16).padLeft(2, '0')).join('').toUpperCase();
     return message;
   }
 }

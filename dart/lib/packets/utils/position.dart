@@ -1,4 +1,4 @@
-part of '../../packets.dart';
+part of '../packets.dart';
 
 class Position {
   /// [latitude] is the latitude of the position.
