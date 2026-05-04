@@ -23,6 +23,7 @@
 #include <string>
 #include <string_view>
 #include <variant>
+#include <vector>
 
 namespace layrz::protocol {
 
@@ -58,8 +59,21 @@ using AnyClientPacket = std::variant<
 // The frame must include the opening <Xx> and closing </Xx> tags.
 Result<AnyServerPacket> handle_server_output(std::string_view raw);
 
-// Serialize an outbound packet to its wire frame string.
+// Dispatch a client-sent frame (from the device) to the correct packet type.
+// Used by servers to decode incoming device traffic.
+Result<AnyClientPacket> handle_client_input(std::string_view raw);
+
+// Split a TCP accumulation buffer containing one or more concatenated client
+// frames into individual frame strings.  Frames are delimited by their own
+// opening tags (<Pa>, <Pb>, <Pc>, …, <Ts>, <Te>, <Im>).
+// Trailing bytes that don't form a complete frame are silently dropped.
+std::vector<std::string> split_client_frames(std::string_view buffer);
+
+// Serialize an outbound client packet to its wire frame string.
 Result<std::string> parse_packet_to_string(const AnyClientPacket& packet);
+
+// Serialize a server packet to its wire frame string.
+Result<std::string> parse_server_packet_to_string(const AnyServerPacket& packet);
 
 } // namespace layrz::protocol
 

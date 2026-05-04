@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.2.0
+
+- Added C++ `TcpServer` and `HttpServer` (Tier-3 `layrz_protocol_servers` CMake target) mirroring Go's server API; gated by `LAYRZ_PROTOCOL_SERVERS` macro
+- Added Go packet subpackages (`packets/client`, `packets/server`, `packets/ai`, `packets/trips`, `packets/helpers`) with decoder, union, and helper types
+- Added Python asyncio `TcpServer` and `HttpServer` with `OnNewPacket`, `OnDecodeError`, `OnAuthenticate`, and `OnPullCommands` callbacks
+- Added Dart pure-Dart `TcpServer` and `HttpServer` under `lib/servers/`; removed Flutter/drift database dependency
+- Refactored Dart package: removed `lib/src/` nesting, flattened all packet paths to `lib/packets/`, `lib/clients/`, `lib/servers/`, `lib/utils/`
+- Added `split_client_frames` and `handle_client_input` to C++ core parser for server-side frame decoding
+- Added server examples for Go, Python, Dart, and C++ under each language's `examples/servers/` directory
+- Added global `make coverage` target aggregating per-language coverage reports with 80% threshold enforcement
+
 ## 3.1.2
 
 - Fixed Dart TCP client `<AuPacket>` handling using `return` instead of `continue`, which caused `<AsPacket>` to be missed when both arrived in the same TCP chunk

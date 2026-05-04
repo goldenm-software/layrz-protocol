@@ -1,6 +1,7 @@
 """Client packets"""
 
 from .base import ClientPacket
+from .decoder import decode_client_packet
 from .pa import PaPacket
 from .pb import PbPacket
 from .pc import PcPacket
@@ -20,4 +21,5 @@ __all__ = [
   'PmPacket',
   'PrPacket',
   'PsPacket',
+  'decode_client_packet',
 ]

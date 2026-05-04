@@ -1,3 +1,10 @@
+.PHONY: coverage
+coverage:
+	@mkdir -p coverage
+	go test -coverprofile=coverage/coverage.out -covermode=atomic ./...
+	@go tool cover -func=coverage/coverage.out | tail -1
+	@../scripts/gocov2lcov.sh coverage/coverage.out > coverage/lcov.info
+
 .PHONY: checks
 checks:
 	@# 1. Checking code formatting

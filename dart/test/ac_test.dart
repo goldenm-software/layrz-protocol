@@ -1,9 +1,12 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_protocol/layrz_protocol.dart';
+import 'package:layrz_protocol/utils/crc.dart';
+import 'package:test/test.dart';
+import 'package:layrz_protocol/packets/packets.dart';
 
 void main() {
   test('Packet.fromPacket() routes AcPacket', () {
-    final original = AcPacket(commands: [Command(commandId: '1', commandName: 'ping', args: {})]);
+    final original = AcPacket(
+      commands: [Command(commandId: '1', commandName: 'ping', args: {})],
+    );
     final parsed = Packet.fromPacket(original.toPacket());
     expect(parsed, isA<AcPacket>());
   });

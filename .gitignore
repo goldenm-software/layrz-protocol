@@ -23,3 +23,7 @@ c_cpp_properties.json
 /*.sln.docstates
 
 .mypy_cache/
+
+# Coverage artifacts
+*/coverage/
+cpp/build-cov/

@@ -1,15 +1,11 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_protocol/layrz_protocol.dart';
+import 'package:test/test.dart';
+import 'package:layrz_protocol/clients/tcp.dart';
 
 void main() {
-  setUpAll(() {
-    TestWidgetsFlutterBinding.ensureInitialized();
-  });
-
   group('LayrzProtocolSocket constructor', () {
     test('parses host and port correctly', () {
       expect(
-        () => LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true),
+        () => LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000'),
         returnsNormally,
       );
     });
@@ -31,14 +27,14 @@ void main() {
 
   group('LayrzProtocolSocket properties', () {
     test('composeEmptyPd returns PdPacket', () {
-      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true);
+      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000');
       final pd = client.composeEmptyPd();
       expect(pd, isA<PdPacket>());
       expect(pd.extra, isEmpty);
     });
 
     test('splitRegExp splits multiple packets', () {
-      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true);
+      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000');
       final ao = AoPacket(timestamp: DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000, isUtc: true));
       final ar = ArPacket(reason: 'error');
       final combined = '${ao.toPacket()}${ar.toPacket()}';
@@ -47,34 +43,51 @@ void main() {
     });
 
     test('onEvent returns a Stream', () {
-      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true);
+      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000');
       expect(client.onEvent, isA<Stream<LayrzTcpEvent>>());
     });
 
     test('disconnect returns true when not connected', () async {
-      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true);
+      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000');
       final result = await client.disconnect();
       expect(result, isTrue);
     });
 
-    test('sendData with null socket saves to blackbox (or ignores if db not initialized)', () async {
-      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true);
+    test('sendData with no socket and no store callback is a no-op', () async {
+      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000');
       final pd = PdPacket(
         timestamp: DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000, isUtc: true),
         position: Position(latitude: 1.0, longitude: 1.0),
         extra: {'x': 1},
       );
-      // Should not throw even with no active socket
       await client.sendData(pd);
     });
 
+    test('sendData with no socket calls onBlackboxStore callback', () async {
+      final stored = <String>[];
+      final client = LayrzProtocolSocket(
+        ident: 'IMEI1',
+        server: 'tcp.example.com:5000',
+        onBlackboxStore: (packet) async => stored.add(packet),
+        onBlackboxFetch: () async => [],
+      );
+      final pd = PdPacket(
+        timestamp: DateTime.fromMillisecondsSinceEpoch(1700000000 * 1000, isUtc: true),
+        position: Position(),
+        extra: {},
+      );
+      await client.sendData(pd);
+      expect(stored.length, 1);
+      expect(stored.first, pd.toPacket());
+    });
+
     test('sendSos with no active socket does not throw', () async {
-      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true);
+      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000');
       await client.sendSos();
     });
 
     test('sendImage with no active socket does not throw', () async {
-      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000', skipDatabase: true);
+      final client = LayrzProtocolSocket(ident: 'IMEI1', server: 'tcp.example.com:5000');
       await client.sendImage(bytes: [0x01, 0x02], filename: 'img.jpg');
     });
   });

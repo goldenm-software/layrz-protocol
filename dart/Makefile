@@ -1,4 +1,8 @@
 .PHONY: checks
 checks:
-	flutter analyze
-	flutter test --reporter expanded --coverage
+	dart analyze
+	dart test test/ --reporter expanded --coverage=coverage
+
+.PHONY: coverage
+coverage:
+	dart test test/ --reporter expanded --coverage=coverage

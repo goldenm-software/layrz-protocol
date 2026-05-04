@@ -1,5 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:layrz_protocol/layrz_protocol.dart';
+import 'package:layrz_protocol/utils/errors.dart';
+import 'package:test/test.dart';
+import 'package:layrz_protocol/packets/packets.dart';
+import 'package:layrz_protocol/utils/crc.dart';
 
 void main() {
   group('PcPacket error paths', () {
@@ -183,7 +185,9 @@ void main() {
     });
 
     test('copyWith works', () {
-      final original = AcPacket(commands: [Command(commandId: '1', commandName: 'ping', args: {})]);
+      final original = AcPacket(
+        commands: [Command(commandId: '1', commandName: 'ping', args: {})],
+      );
       final copy = original.copyWith(commands: []);
       expect(copy.commands, isEmpty);
     });
