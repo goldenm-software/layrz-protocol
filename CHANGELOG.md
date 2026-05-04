@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.2
+
+- Fixed Dart TCP client `<AuPacket>` handling using `return` instead of `continue`, which caused `<AsPacket>` to be missed when both arrived in the same TCP chunk
+- Added Dart TCP client IPv6 preference: hostname resolution now picks an AAAA record when available, falling back to A
+
 ## 3.1.1
 
 - Fixed Go `BleAdvertisement.Latitude`, `Longitude`, and `Altitude` fields changed from `float64` to `*float64` so devices without GPS fix correctly report absent coordinates as `nil` instead of `0.0`
