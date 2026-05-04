@@ -1,6 +1,6 @@
 name: layrz_protocol
 description: Layrz Link Protocol
-version: "3.1.1"
+version: "3.1.2"
 repository: https://github.com/goldenm-software/layrz-protocol
 
 environment:
@@ -17,6 +17,7 @@ dependencies:
   drift: ^2.24.0
   drift_flutter: ^0.2.4
   path_provider: ^2.1.5
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:
