@@ -38,8 +38,10 @@ classifiers = [
 ]
 
 dependencies = [
+  "aiohttp>=3.10",
   "deprecated>=1.2.18",
   "pydantic>=2.10.6",
+  "proxy-protocol>=0.10",
   "requests>=2.32.3",
   "typing-extensions>=4.12.2",
   "tzdata>=2025.1",
@@ -54,11 +56,19 @@ Changelog = "https://github.com/goldenm-software/layrz-protocol/blob/main/CHANGE
 requires = ["setuptools>=42", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools_scm]
+fallback-version = "3.1.2"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["layrz_protocol*"]
+
 [dependency-groups]
 dev = [
   "build>=1.2.2.post1",
   "coverage>=7.6.10",
   "pytest>=8.3.5",
+  "pytest-asyncio>=0.24",
   "pytest-cov>=6.0.0",
   "ruff>=0.9.4",
   "setuptools-scm>=8.1.0",
@@ -110,3 +120,6 @@ python-version = "3.13"
 
 [tool.ty.src]
 exclude = [".venv/", ".ruff_cache/"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
