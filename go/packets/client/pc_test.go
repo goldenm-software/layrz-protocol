@@ -6,6 +6,28 @@ import (
 	"github.com/goldenm-software/layrz-protocol/go/v3/packets/client"
 )
 
+func TestPc_FromPacket_Errors(t *testing.T) {
+	cases := []struct {
+		name string
+		raw  string
+	}{
+		{"wrong envelope", "<Xx>garbage</Xx>"},
+		{"bad CRC hex", "<Pc>1700000000;1;OK;ZZZZ</Pc>"},
+		{"CRC mismatch", "<Pc>1700000000;1;OK;0000</Pc>"},
+		{"wrong part count", "<Pc>1700000000;0000</Pc>"},
+		{"bad timestamp", "<Pc>notanint;1;OK;"},
+		{"bad command id", "<Pc>1700000000;notanint;OK;"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			raw := tc.raw
+			if err := (&client.PcPacket{}).FromPacket(&raw); err == nil {
+				t.Errorf("expected error, got nil")
+			}
+		})
+	}
+}
+
 func TestPc_FromPacket_ToPacket(t *testing.T) {
 	tests := []struct {
 		name      string
