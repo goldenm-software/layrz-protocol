@@ -5,8 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(LAYRZ_PROTOCOL_BUILD_NET   "Build HTTP and TCP transport layer (requires pthreads)" ON)
-option(LAYRZ_PROTOCOL_BUILD_TESTS "Build tests (requires GoogleTest via FetchContent)"    ON)
+option(LAYRZ_PROTOCOL_BUILD_NET     "Build HTTP and TCP transport layer (requires pthreads)" ON)
+option(LAYRZ_PROTOCOL_BUILD_SERVERS "Build TCP and HTTP server layer (requires pthreads)"   ON)
+option(LAYRZ_PROTOCOL_BUILD_TESTS   "Build tests (requires GoogleTest via FetchContent)"    ON)
 
 # ─── Core library (Tier 1) ───────────────────────────────────────────────────
 file(GLOB_RECURSE CORE_SOURCES
@@ -68,8 +69,56 @@ if(LAYRZ_PROTOCOL_BUILD_NET)
     )
 
     target_compile_definitions(layrz_protocol_net
-        PUBLIC  LAYRZ_PROTOCOL_CLIENTS
-        PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT=0
+        PUBLIC LAYRZ_PROTOCOL_CLIENTS
+    )
+    target_compile_options(layrz_protocol_net
+        PRIVATE -UCPPHTTPLIB_OPENSSL_SUPPORT
+    )
+endif()
+
+# ─── Servers library (Tier 3) ────────────────────────────────────────────────
+if(LAYRZ_PROTOCOL_BUILD_SERVERS)
+    find_package(Threads REQUIRED)
+
+    # Reuse cpp-httplib resolution from BUILD_NET block if already resolved
+    if(NOT HTTPLIB_INCLUDE_DIR)
+        find_path(HTTPLIB_INCLUDE_DIR httplib.h)
+        if(NOT HTTPLIB_INCLUDE_DIR)
+            include(FetchContent)
+            FetchContent_Declare(
+                cpp-httplib
+                GIT_REPOSITORY https://github.com/yhirose/cpp-httplib.git
+                GIT_TAG        v0.18.3
+            )
+            FetchContent_MakeAvailable(cpp-httplib)
+            set(HTTPLIB_INCLUDE_DIR "${cpp-httplib_SOURCE_DIR}")
+        endif()
+    endif()
+
+    add_library(layrz_protocol_servers
+        src/servers/tcp.cpp
+        src/servers/http.cpp
+    )
+    add_library(layrz::protocol::servers ALIAS layrz_protocol_servers)
+
+    target_include_directories(layrz_protocol_servers
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<INSTALL_INTERFACE:include>
+        PRIVATE
+            ${HTTPLIB_INCLUDE_DIR}
+    )
+
+    target_link_libraries(layrz_protocol_servers
+        PUBLIC  layrz_protocol_core
+        PRIVATE Threads::Threads
+    )
+
+    target_compile_definitions(layrz_protocol_servers
+        PUBLIC LAYRZ_PROTOCOL_SERVERS
+    )
+    target_compile_options(layrz_protocol_servers
+        PRIVATE -UCPPHTTPLIB_OPENSSL_SUPPORT
     )
 endif()
 
@@ -97,6 +146,14 @@ if(LAYRZ_PROTOCOL_BUILD_NET)
     target_link_libraries(example_tcp_client PRIVATE layrz_protocol_net)
 endif()
 
+if(LAYRZ_PROTOCOL_BUILD_SERVERS)
+    add_executable(example_tcp_server examples/servers/tcp_server.cpp)
+    target_link_libraries(example_tcp_server PRIVATE layrz_protocol_servers)
+
+    add_executable(example_http_server examples/servers/http_server.cpp)
+    target_link_libraries(example_http_server PRIVATE layrz_protocol_servers)
+endif()
+
 # ─── Install ──────────────────────────────────────────────────────────────────
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -109,6 +166,14 @@ install(TARGETS layrz_protocol_core
 
 if(LAYRZ_PROTOCOL_BUILD_NET)
     install(TARGETS layrz_protocol_net
+        EXPORT  LayrzProtocolTargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+endif()
+
+if(LAYRZ_PROTOCOL_BUILD_SERVERS)
+    install(TARGETS layrz_protocol_servers
         EXPORT  LayrzProtocolTargets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
