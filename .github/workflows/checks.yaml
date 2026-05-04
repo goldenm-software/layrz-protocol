@@ -104,6 +104,18 @@ jobs:
           enable-cpp: true
           cpp-coverage-path: cpp-coverage/lcov.info
 
+      - uses: goldenm-software/layrz-actions/.github/actions/coverage-check@v1
+        with:
+          enable-python: true
+          python-coverage-path: python-coverage/lcov.info
+          enable-go: true
+          go-coverage-path: go-coverage/lcov.info
+          enable-dart: true
+          dart-coverage-path: dart-coverage/lcov.info
+          enable-cpp: true
+          cpp-coverage-path: cpp-coverage/lcov.info
+          threshold: '80'
+
   changelog:
     runs-on: ubuntu-latest
     steps:
