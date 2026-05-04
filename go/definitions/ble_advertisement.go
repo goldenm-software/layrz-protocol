@@ -12,15 +12,15 @@ type BleAdvertisement struct {
 
 	// Is the closest latitude of the device. Defined by the device that is detecting.
 	// This value is optional
-	Latitude float64
+	Latitude *float64
 
 	// Is the closest longitude of the device. Defined by the device that is detecting.
 	// This value is optional
-	Longitude float64
+	Longitude *float64
 
 	// Is the closest altitude of the device. Defined by the device that is detecting.
 	// This value is optional
-	Altitude float64
+	Altitude *float64
 
 	// Is the signal strength of the detected device.
 	Rssi int
