@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.1
+
+- Fixed Go `BleAdvertisement.Latitude`, `Longitude`, and `Altitude` fields changed from `float64` to `*float64` so devices without GPS fix correctly report absent coordinates as `nil` instead of `0.0`
+- Fixed Go `<Pb>` packet parser to return an error (rather than silently zero-ing) when coordinate fields are present but non-numeric
+- Fixed Go `<Pb>` parser to normalize MAC addresses to uppercase colon-separated format (`AA:BB:CC:DD:EE:FF`) after CRC validation
+
 ## 3.1.0
 
 - Added full C++ implementation (`cpp/`) with CMake C++17 build, covering all packet types (`Pa`, `Pb`, `Pc`, `Pd`, `Pi`, `Pm`, `Pr`, `Ps`, `Ab`, `Ac`, `Ao`, `Ar`, `As`, `Au`, `Ts`, `Te`, `Im`), CRC-16/X-25, BLE advertisement codec, extras parser, and HTTP/TCP transports
