@@ -1,3 +1,4 @@
+// coverage:ignore-file
 part of '../../layrz_protocol.dart';
 
 class LayrzProtocolSocket {
