@@ -15,3 +15,13 @@ checks:
 	@$(MAKE) -C python checks
 	@$(MAKE) -C dart checks
 	@$(MAKE) -C go checks
+	@$(MAKE) -C cpp checks
+
+.PHONY: coverage
+coverage:
+	@echo "Running coverage for all languages..."
+	@$(MAKE) -C python coverage
+	@$(MAKE) -C dart coverage
+	@$(MAKE) -C go coverage
+	@$(MAKE) -C cpp coverage
+	@./scripts/coverage-summary.sh
