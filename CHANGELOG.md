@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.0
+
+- Fixed extra-arg parsing so values containing a colon (e.g. a MAC-like identifier `a4:c1:38:5c:02:f6:b4:53`) round-trip intact: string values now escape `:` as `___` on serialize and the parser reverses it, keeping the `key:value` split unambiguous. Applied across Python, Dart and Go.
+
 ## 3.2.0
 
 - Added C++ `TcpServer` and `HttpServer` (Tier-3 `layrz_protocol_servers` CMake target) mirroring Go's server API; gated by `LAYRZ_PROTOCOL_SERVERS` macro
