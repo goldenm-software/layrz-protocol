@@ -1,6 +1,6 @@
 name: layrz_protocol
 description: Layrz Link Protocol
-version: "3.2.0"
+version: "3.3.0"
 repository: https://github.com/goldenm-software/layrz-protocol
 
 environment:

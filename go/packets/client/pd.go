@@ -186,7 +186,10 @@ func (p *PdPacket) ToPacket() *string {
 	for key, value := range p.ExtraData {
 		switch v := value.(type) {
 		case string:
-			args = append(args, fmt.Sprintf("%s:%s", key, strings.TrimSpace(v)))
+			// Escape colons in the value so they don't collide with the `key:value` separator on the
+			// wire. Reversed by wire.ParseArgs (`___` -> `:`).
+			escaped := strings.ReplaceAll(strings.TrimSpace(v), ":", "___")
+			args = append(args, fmt.Sprintf("%s:%s", key, escaped))
 		case int:
 			args = append(args, fmt.Sprintf("%s:%d", key, v))
 		case int8:

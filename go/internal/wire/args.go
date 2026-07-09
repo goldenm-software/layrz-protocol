@@ -109,7 +109,9 @@ func ParseArgs(rawArgs string) map[string]any {
 			key = "serial.confiot.connection.status"
 		}
 
-		value := strings.Join(subparts[1:], ":")
+		// Values may contain a colon (e.g. a MAC-like identifier); the serializer escapes it as `___`
+		// so the `key:value` split stays unambiguous. Reverse that before any type coercion.
+		value := strings.ReplaceAll(strings.Join(subparts[1:], ":"), "___", ":")
 
 		intRegexp := regexp.MustCompile(`^-?\d+$`)
 		floatRegexp := regexp.MustCompile(`^-?\d+\.\d+$`)
