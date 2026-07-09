@@ -216,16 +216,20 @@ class Packet {
         key = extraPartParts[0];
       }
 
-      if (['true', 't'].contains(extraPartParts[1].toString().toLowerCase())) {
+      // Values may contain a colon (e.g. a MAC-like identifier); the serializer escapes it as `___`
+      // so the `key:value` split stays unambiguous. Reverse that before any type coercion.
+      final value = extraPartParts[1].replaceAll('___', ':');
+
+      if (['true', 't'].contains(value.toString().toLowerCase())) {
         extra[key] = true;
-      } else if (['false', 'f'].contains(extraPartParts[1].toString().toLowerCase())) {
+      } else if (['false', 'f'].contains(value.toString().toLowerCase())) {
         extra[key] = false;
-      } else if (RegExp(r'^-?\d+\.\d+$').hasMatch(extraPartParts[1])) {
-        extra[key] = double.tryParse(extraPartParts[1]);
-      } else if (RegExp(r'^-?\d+$').hasMatch(extraPartParts[1])) {
-        extra[key] = int.tryParse(extraPartParts[1]);
+      } else if (RegExp(r'^-?\d+\.\d+$').hasMatch(value)) {
+        extra[key] = double.tryParse(value);
+      } else if (RegExp(r'^-?\d+$').hasMatch(value)) {
+        extra[key] = int.tryParse(value);
       } else {
-        extra[key] = extraPartParts[1];
+        extra[key] = value;
       }
     }
 
@@ -267,6 +271,9 @@ class Packet {
       for (String ascii in asciiMap.keys) {
         value = value.replaceAll(ascii, asciiMap[ascii]);
       }
+      // Escape colons in the value so they don't collide with the `key:value` separator on the wire.
+      // Reversed by parseExtraArgs (`___` -> `:`).
+      value = value.replaceAll(':', '___');
     }
 
     return {key: value};

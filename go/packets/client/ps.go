@@ -72,7 +72,9 @@ func (p *PsPacket) ToPacket() *string {
 	for key, value := range p.Params {
 		switch v := value.(type) {
 		case string:
-			params = append(params, fmt.Sprintf("%s:%s", key, v))
+			// Escape colons in the value so they don't collide with the `key:value` separator on the
+			// wire. Reversed by wire.ParseArgs (`___` -> `:`).
+			params = append(params, fmt.Sprintf("%s:%s", key, strings.ReplaceAll(v, ":", "___")))
 		case int:
 			params = append(params, fmt.Sprintf("%s:%d", key, v))
 		case float64:

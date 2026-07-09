@@ -19,6 +19,10 @@ def parse_extra(raw: str) -> dict[str, Any]:
     value: Any
     key, value = param.split(':', maxsplit=1)
 
+    # Values may contain a colon (e.g. a MAC-like identifier); the serializer escapes it as `___` so
+    # the `key:value` split stays unambiguous. Reverse that here before any type coercion.
+    value = value.replace('___', ':')
+
     if re.match(r'^io[0-9]+\.di$', key):  # Digital input
       gpio = key.replace('io', '').replace('.di', '')
       key = f'gpio.{gpio}.digital.input'
@@ -179,6 +183,10 @@ def convert_to_dotcase(key: str, value: Any) -> dict[str, Any]:
     for char in value:
       if char in ASCII_MAP:
         value = value.replace(char, ASCII_MAP[char])
+
+    # Escape colons in the value so they don't collide with the `key:value` separator on the wire.
+    # Reversed by parse_extra (`___` -> `:`).
+    value = value.replace(':', '___')
 
     return {key: value}
 
