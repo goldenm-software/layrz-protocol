@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.1
+
+- Fixed extra-arg colon escaping to also cover the **key**, not just the value. 3.3.0 escaped only values, but a Zigbee entry carries its colons in the key (`{mac}.{expose}`, e.g. `a4:c1:38:5c:02:f6:b4:53.energy`); `:` is now escaped as `___` on both key and value when serializing and reversed on parse, so such keys round-trip intact. Applied across Python, Dart and Go.
+
 ## 3.3.0
 
 - Fixed extra-arg parsing so values containing a colon (e.g. a MAC-like identifier `a4:c1:38:5c:02:f6:b4:53`) round-trip intact: string values now escape `:` as `___` on serialize and the parser reverses it, keeping the `key:value` split unambiguous. Applied across Python, Dart and Go.

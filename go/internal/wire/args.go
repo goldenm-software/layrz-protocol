@@ -23,7 +23,9 @@ func ParseArgs(rawArgs string) map[string]any {
 			continue
 		}
 
-		key := subparts[0]
+		// Keys and values may contain a colon (e.g. a MAC-like identifier); the serializer escapes it
+		// as `___` so the `key:value` split stays unambiguous. Reverse the key before pattern matching.
+		key := strings.ReplaceAll(subparts[0], "___", ":")
 
 		patterns := map[string]*regexp.Regexp{
 			"digitalInput":    regexp.MustCompile(`^io[0-9]+\.di$`),

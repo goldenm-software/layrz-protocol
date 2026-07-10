@@ -107,6 +107,11 @@ class Packet {
         ];
       }
 
+      // Keys and values may contain a colon (e.g. a MAC-like identifier); the serializer escapes it
+      // as `___` so the `key:value` split stays unambiguous. Reverse the key here so pattern matching
+      // and the stored key use the real value (the value is unescaped further below).
+      extraPartParts[0] = extraPartParts[0].replaceAll('___', ':');
+
       String key;
 
       final RegExp digitalInput = RegExp(r'^io[0-9]+\.di$');

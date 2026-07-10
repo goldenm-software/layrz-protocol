@@ -19,8 +19,10 @@ def parse_extra(raw: str) -> dict[str, Any]:
     value: Any
     key, value = param.split(':', maxsplit=1)
 
-    # Values may contain a colon (e.g. a MAC-like identifier); the serializer escapes it as `___` so
-    # the `key:value` split stays unambiguous. Reverse that here before any type coercion.
+    # Keys and values may contain a colon (e.g. a MAC-like identifier); the serializer escapes it as
+    # `___` so the `key:value` split stays unambiguous. Reverse it on both sides before any matching
+    # or type coercion.
+    key = key.replace('___', ':')
     value = value.replace('___', ':')
 
     if re.match(r'^io[0-9]+\.di$', key):  # Digital input
@@ -154,10 +156,13 @@ def cast_extra(extra: dict[str, Any]) -> str:
 
   extra_list: list[str] = []
   for key, value in payload.items():
+    # Escape colons in the key so they don't collide with the `key:value` separator on the wire
+    # (e.g. a MAC-like identifier `a4:c1:...`). Reversed by parse_extra (`___` -> `:`).
+    escaped_key = key.replace(':', '___')
     if isinstance(value, bool):
-      extra_list.append(f'{key}:{"true" if value else "false"}')
+      extra_list.append(f'{escaped_key}:{"true" if value else "false"}')
     else:
-      extra_list.append(f'{key}:{value}')
+      extra_list.append(f'{escaped_key}:{value}')
 
   return ','.join(extra_list)
 

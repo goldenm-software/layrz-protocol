@@ -34,7 +34,10 @@ void main() {
 
     List<String> extraList = [];
     for (String key in extra.keys) {
-      extraList.add('$key:${extra[key]}');
+      // Colons in key and value are escaped as `___` on the wire (see PdPacket.toPacket).
+      final escapedKey = key.replaceAll(':', '___');
+      final escapedValue = '${extra[key]}'.replaceAll(':', '___');
+      extraList.add('$escapedKey:$escapedValue');
     }
 
     payload += '${extraList.join(',')};'; // End of extras
