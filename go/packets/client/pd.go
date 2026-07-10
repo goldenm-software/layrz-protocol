@@ -183,11 +183,13 @@ func (p *PdPacket) ToPacket() *string {
 	}
 
 	args := make([]string, 0)
-	for key, value := range p.ExtraData {
+	for rawKey, value := range p.ExtraData {
+		// Escape colons in the key so they don't collide with the `key:value` separator on the wire
+		// (e.g. a MAC-like identifier `a4:c1:...`). Reversed by wire.ParseArgs (`___` -> `:`).
+		key := strings.ReplaceAll(rawKey, ":", "___")
 		switch v := value.(type) {
 		case string:
-			// Escape colons in the value so they don't collide with the `key:value` separator on the
-			// wire. Reversed by wire.ParseArgs (`___` -> `:`).
+			// Escape colons in the value as well.
 			escaped := strings.ReplaceAll(strings.TrimSpace(v), ":", "___")
 			args = append(args, fmt.Sprintf("%s:%s", key, escaped))
 		case int:

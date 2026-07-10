@@ -69,11 +69,13 @@ func (p *PsPacket) ToPacket() *string {
 	content := ""
 
 	params := make([]string, 0)
-	for key, value := range p.Params {
+	for rawKey, value := range p.Params {
+		// Escape colons in the key so they don't collide with the `key:value` separator on the wire
+		// (e.g. a MAC-like identifier `a4:c1:...`). Reversed by wire.ParseArgs (`___` -> `:`).
+		key := strings.ReplaceAll(rawKey, ":", "___")
 		switch v := value.(type) {
 		case string:
-			// Escape colons in the value so they don't collide with the `key:value` separator on the
-			// wire. Reversed by wire.ParseArgs (`___` -> `:`).
+			// Escape colons in the value as well.
 			params = append(params, fmt.Sprintf("%s:%s", key, strings.ReplaceAll(v, ":", "___")))
 		case int:
 			params = append(params, fmt.Sprintf("%s:%d", key, v))

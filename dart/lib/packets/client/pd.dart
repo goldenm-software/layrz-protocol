@@ -90,7 +90,11 @@ class PdPacket extends ClientPacket {
 
     List<String> extraList = [];
     for (String key in extra.keys) {
-      extraList.add('$key:${extra[key]}');
+      // Escape colons in key and value so they don't collide with the `key:value` separator on the
+      // wire (e.g. a MAC-like identifier `a4:c1:...`). Reversed by Packet.parseExtraArgs (`___` -> `:`).
+      final escapedKey = key.replaceAll(':', '___');
+      final escapedValue = '${extra[key]}'.replaceAll(':', '___');
+      extraList.add('$escapedKey:$escapedValue');
     }
 
     payload += '${extraList.join(',')};';
